@@ -8,7 +8,7 @@
     />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="mobile-web-app-capable" content="yes" />
-    <title>きっずゲーム - ショベルカー＆トラクター</title>
+    <title>きっずゲーム - ショベルカー＆トラクター＆ブルドーザー</title>
     <link rel="stylesheet" href="/src/style.css" />
   </head>
   <body>
@@ -76,12 +76,29 @@
             </div>
             <button data-mode="tractor">はじめる！</button>
           </div>
+
+          <div class="mode-card">
+            <div class="mode-icon">🪨</div>
+            <h2>ブルドーザー</h2>
+            <p>大きな岩を押してゴールに運ぼう！</p>
+            <div class="tutorial" id="bulldozer-start-tutorial">
+              <div class="tutorial-item">
+                <span class="hand left">👈</span>
+                <span>左手：カメラをまわす・上下</span>
+              </div>
+              <div class="tutorial-item">
+                <span class="hand right">👉</span>
+                <span>右手：ハンドル・前後</span>
+              </div>
+            </div>
+            <button data-mode="bulldozer">はじめる！</button>
+          </div>
         </div>
       </div>
 
       <div id="clear-screen" class="hidden">
         <h1>🎉 やったね！</h1>
-        <p>ぜんぶ集められたよ！</p>
+        <p id="clear-message">ぜんぶ集められたよ！</p>
         <button id="restart-btn">もういちど！</button>
       </div>
 

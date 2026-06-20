@@ -5,8 +5,8 @@ const GROUND_Y = 0.12;
 export class Tractor {
   constructor(scene) {
     this.group = new THREE.Group();
-    this.maxSpeed = 3.2;
-    this.turnSpeed = 1.8;
+    this.maxSpeed = 2.1;
+    this.turnSpeed = 1.2;
     this.steerAngle = 0;
     this.wheelSpin = 0;
 

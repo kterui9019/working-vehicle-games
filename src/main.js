@@ -4,6 +4,8 @@ import { Tractor } from "./Tractor.js";
 import { Joystick } from "./Joystick.js";
 import { Game } from "./Game.js";
 import { TractorGame } from "./TractorGame.js";
+import { Bulldozer } from "./Bulldozer.js";
+import { BulldozerGame } from "./BulldozerGame.js";
 
 class KidsGameApp {
   constructor() {
@@ -15,6 +17,7 @@ class KidsGameApp {
     this.messageEl = document.getElementById("message");
     this.startScreen = document.getElementById("start-screen");
     this.clearScreen = document.getElementById("clear-screen");
+    this.clearMessageEl = document.getElementById("clear-message");
     this.tractorResetBtn = document.getElementById("tractor-restart-btn");
     this.joystickLeft = document.getElementById("joystick-left");
     this.joystickRight = document.getElementById("joystick-right");
@@ -98,10 +101,35 @@ class KidsGameApp {
       this.scoreTotalEl.style.display = "none";
       this.scoreEl.textContent = "0";
       this.tractorResetBtn.classList.remove("hidden");
+      this.tractorResetBtn.textContent = "🌱 リセット";
       this.joystickRight.classList.add("hidden");
       this.joystickLeft.style.left = "50%";
       this.joystickLeft.style.transform = "translateX(-50%)";
       this.leftLabel.textContent = "ハンドル・前後";
+    } else if (mode === "bulldozer") {
+      this.vehicle = new Bulldozer(this.scene);
+      this.game = new BulldozerGame(this.scene, this.vehicle);
+
+      this.bulldozerCamYaw = Math.PI * 0.85;
+      this.bulldozerCamPitch = 0.55;
+      this.bulldozerCamDistance = 9;
+
+      this.scoreIconEl.textContent = "🪨";
+      this.scoreTotalEl.style.display = "";
+      this.totalEl.textContent = this.game.totalRocks;
+      this.scoreEl.textContent = "0";
+      this.tractorResetBtn.classList.remove("hidden");
+      this.tractorResetBtn.textContent = "🪨 リセット";
+      this.joystickRight.classList.remove("hidden");
+      this.joystickLeft.style.left = "";
+      this.joystickLeft.style.transform = "";
+      this.leftLabel.textContent = "カメラ";
+      this.rightLabel.textContent = "ハンドル・前後";
+
+      this.game.onClear = () => {
+        this.clearMessageEl.textContent = "ぜんぶ岩を運べたよ！";
+        this.clearScreen.classList.remove("hidden");
+      };
     } else {
       this.vehicle = new Excavator(this.scene);
       this.game = new Game(this.scene, this.vehicle);
@@ -118,6 +146,7 @@ class KidsGameApp {
       this.rightLabel.textContent = "ブーム・バケット";
 
       this.game.onClear = () => {
+        this.clearMessageEl.textContent = "ぜんぶ集められたよ！";
         this.clearScreen.classList.remove("hidden");
       };
     }
@@ -170,17 +199,45 @@ class KidsGameApp {
     if (this.running && this.vehicle && this.game) {
       if (this.mode === "tractor") {
         this.vehicle.update(this.leftStick, dt);
+      } else if (this.mode === "bulldozer") {
+        this.vehicle.update(this.rightStick, dt);
       } else {
         this.vehicle.update(this.leftStick, this.rightStick, dt);
       }
       this.game.update(dt);
     }
 
-    if (this.vehicle) this._updateCamera();
+    if (this.vehicle) this._updateCamera(dt);
     this.renderer.render(this.scene, this.camera);
   }
 
-  _updateCamera() {
+  _updateCamera(dt) {
+    if (this.mode === "bulldozer") {
+      const camInput = this.leftStick;
+      if (Math.abs(camInput.x) > 0.05 || Math.abs(camInput.y) > 0.05) {
+        this.bulldozerCamYaw -= camInput.x * 1.3 * dt;
+        this.bulldozerCamPitch = THREE.MathUtils.clamp(
+          this.bulldozerCamPitch + camInput.y * 0.85 * dt,
+          0.25,
+          1.1
+        );
+      }
+
+      const pos = this.vehicle.getWorldPosition();
+      const target = new THREE.Vector3(pos.x, 1.2, pos.z);
+      const horizDist = this.bulldozerCamDistance * Math.cos(this.bulldozerCamPitch);
+      const height = this.bulldozerCamDistance * Math.sin(this.bulldozerCamPitch) + 1.0;
+      const desired = new THREE.Vector3(
+        target.x + Math.sin(this.bulldozerCamYaw) * horizDist,
+        height,
+        target.z + Math.cos(this.bulldozerCamYaw) * horizDist
+      );
+
+      this.camera.position.lerp(desired, 0.06);
+      this.camera.lookAt(target);
+      return;
+    }
+
     if (this.mode === "tractor") {
       const pos = this.vehicle.getWorldPosition();
       const target = new THREE.Vector3(pos.x, 1.2, pos.z);

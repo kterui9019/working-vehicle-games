@@ -135,10 +135,24 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
   background: rgba(135, 206, 235, 0.95);
   text-align: center;
-  padding: 24px;
+  padding: 24px 24px 48px;
+}
+
+#start-screen *,
+#clear-screen * {
+  touch-action: pan-y;
+}
+
+#start-screen button,
+#clear-screen button {
+  touch-action: manipulation;
 }
 
 #start-screen h1,
@@ -259,6 +273,23 @@ button:active {
 }
 
 @media (max-width: 480px) {
+  #start-screen h1,
+  #clear-screen h1 {
+    font-size: 28px;
+  }
+
+  #start-screen > p,
+  #clear-screen > p {
+    font-size: 16px;
+    margin-bottom: 16px;
+  }
+
+  .mode-card {
+    width: 100%;
+    max-width: 300px;
+    padding: 20px 16px;
+  }
+
   .joystick-base {
     width: 110px;
     height: 110px;
