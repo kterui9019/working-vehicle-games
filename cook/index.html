@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>おうちでコックさん</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- メニュー画面 -->
+  <div id="menu-screen" class="menu-screen">
+    <div class="menu-content">
+      <h1 class="menu-title">おうちでコックさん</h1>
+      <p class="menu-subtitle">なにを つくる？</p>
+      <div class="recipe-cards">
+        <button class="recipe-card" data-recipe="hamburger">
+          <div class="recipe-icon hamburger-icon"></div>
+          <span class="recipe-name">ハンバーグ</span>
+          <span class="recipe-desc">トントン きって やいて もりつけ</span>
+        </button>
+        <button class="recipe-card" data-recipe="omurice">
+          <div class="recipe-icon omurice-icon"></div>
+          <span class="recipe-name">オムライス</span>
+          <span class="recipe-desc">チキンライスに ふわふわたまご</span>
+        </button>
+        <button class="recipe-card" data-recipe="pizza">
+          <div class="recipe-icon pizza-icon"></div>
+          <span class="recipe-name">ピザ</span>
+          <span class="recipe-desc">まるく のばして やいて かざる</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="game-container" style="display: none;">
+    <!-- ヘッダー・ステップナビゲーション -->
+    <header>
+      <button id="back-to-menu-btn" class="back-btn" aria-label="メニューにもどる">← メニュー</button>
+      <h1 id="game-title">おうちでコックさん</h1>
+      <div class="steps-nav" id="steps-nav">
+        <div class="step-indicator active" id="step-nav-1">
+          <span class="step-num">1</span>
+          <span class="step-text">じゅんび</span>
+        </div>
+        <div class="step-indicator" id="step-nav-2">
+          <span class="step-num">2</span>
+          <span class="step-text">やく</span>
+        </div>
+        <div class="step-indicator" id="step-nav-3">
+          <span class="step-num">3</span>
+          <span class="step-text">もりつけ</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- メインのクッキングエリア -->
+    <main id="kitchen-table">
+      <!-- ===== ハンバーグ ===== -->
+      <div id="hamburger-game" class="recipe-game">
+        <!-- ステップ1: じゅんび -->
+        <section id="hb-step-1" class="step-section active">
+          <div class="workspace-1">
+            <div class="cutting-area">
+              <div class="cutting-board" id="cutting-board">
+                <div class="onion" id="onion" data-state="whole">
+                  <div class="onion-body">
+                    <div class="onion-line"></div>
+                  </div>
+                  <div class="onion-pieces"></div>
+                </div>
+              </div>
+              <p class="guide-bubble">たまねぎを トントン きろう</p>
+            </div>
+
+            <div class="bowl-area">
+              <div class="ingredients-shelf">
+                <div class="draggable-ingredient" id="ing-meat" draggable="false">
+                  <div class="ing-meat-body"></div>
+                  <span>ひきにく</span>
+                </div>
+                <div class="draggable-ingredient" id="ing-onion" draggable="false" style="display: none;">
+                  <div class="ing-onion-body"></div>
+                  <span>たまねぎ</span>
+                </div>
+                <div class="draggable-ingredient" id="ing-egg" draggable="false">
+                  <div class="ing-egg-body"></div>
+                  <span>たまご</span>
+                </div>
+                <div class="draggable-ingredient" id="ing-breadcrumbs" draggable="false">
+                  <div class="ing-breadcrumbs-body"></div>
+                  <span>パンこ</span>
+                </div>
+              </div>
+
+              <div class="bowl-wrapper">
+                <div class="bowl" id="mixing-bowl">
+                  <div class="bowl-inside" id="bowl-inside"></div>
+                </div>
+                <p class="guide-bubble" id="bowl-guide">ざいりょうを ボウルにいれよう</p>
+              </div>
+            </div>
+          </div>
+
+          <div id="knead-area" class="overlay-area" style="display: none;">
+            <div class="knead-box">
+              <div class="bowl large" id="knead-bowl">
+                <div class="bowl-inside">
+                  <div class="meat-dough" id="meat-dough"></div>
+                </div>
+              </div>
+              <p class="guide-bubble" id="knead-guide">くるくる まぜよう</p>
+            </div>
+          </div>
+
+          <div id="shape-area" class="overlay-area" style="display: none;">
+            <div class="shape-box">
+              <div class="shaping-tray" id="shaping-tray">
+                <div class="raw-patty" id="raw-patty"></div>
+              </div>
+              <p class="guide-bubble" id="shape-guide">ペチペチ たたいて かたちを ととのえよう</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ステップ2: やく -->
+        <section id="hb-step-2" class="step-section">
+          <div class="workspace-2">
+            <div class="stove-area">
+              <div class="stove">
+                <div class="burner">
+                  <div class="fire" id="stove-fire"></div>
+                </div>
+                <div class="pan" id="frying-pan">
+                  <div class="pan-inside" id="pan-inside"></div>
+                </div>
+              </div>
+              <p class="guide-bubble" id="stove-guide">ハンバーグを フライパンにいれよう</p>
+            </div>
+
+            <div class="plate-area">
+              <div class="tray" id="tray-container">
+                <div class="patty-to-cook" id="patty-to-cook" draggable="false"></div>
+              </div>
+              <div class="plate" id="resting-plate">
+                <div class="plate-inside" id="resting-plate-inside"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ステップ3: もりつけ -->
+        <section id="hb-step-3" class="step-section">
+          <div class="workspace-3">
+            <div class="plating-area">
+              <div class="plate large" id="final-plate">
+                <div class="plate-inside" id="final-plate-inside">
+                  <div class="cooked-patty-final" id="final-patty"></div>
+                  <canvas id="sauce-canvas"></canvas>
+                </div>
+              </div>
+              <p class="guide-bubble" id="plating-guide">やさいを もりつけよう</p>
+            </div>
+
+            <div class="side-shelf">
+              <div class="topping-box">
+                <h3>トッピング</h3>
+                <div class="toppings-container">
+                  <div class="draggable-topping" id="top-broccoli" data-type="broccoli">
+                    <div class="broccoli-icon"></div>
+                    <span>ブロッコリー</span>
+                  </div>
+                  <div class="draggable-topping" id="top-carrot" data-type="carrot">
+                    <div class="carrot-icon"></div>
+                    <span>にんじん</span>
+                  </div>
+                  <div class="draggable-topping" id="top-tomato" data-type="tomato">
+                    <div class="tomato-icon"></div>
+                    <span>ミニトマト</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="sauce-box">
+                <h3>ソース</h3>
+                <div class="sauce-bottles">
+                  <div class="sauce-bottle" id="sauce-ketchup" data-sauce="ketchup">
+                    <div class="bottle-body ketchup"></div>
+                    <span>ケチャップ</span>
+                  </div>
+                  <div class="sauce-bottle" id="sauce-brown" data-sauce="brown">
+                    <div class="bottle-body brown"></div>
+                    <span>デミソース</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- ===== オムライス ===== -->
+      <div id="omurice-game" class="recipe-game" style="display: none;">
+        <!-- ステップ1: チキンライス -->
+        <section id="om-step-1" class="step-section active">
+          <div class="workspace-1 om-workspace-1">
+            <div class="cutting-area">
+              <div class="cutting-board">
+                <div class="chicken" id="om-chicken">
+                  <div class="chicken-body"></div>
+                  <div class="chicken-pieces"></div>
+                </div>
+              </div>
+              <p class="guide-bubble" id="om-chicken-guide">チキンを トントン きろう</p>
+            </div>
+
+            <div class="om-pan-area">
+              <div class="ingredients-shelf om-shelf">
+                <div class="draggable-ingredient" id="om-ing-rice" draggable="false">
+                  <div class="ing-rice-body"></div>
+                  <span>ごはん</span>
+                </div>
+                <div class="draggable-ingredient" id="om-ing-chicken" draggable="false" style="display: none;">
+                  <div class="ing-chicken-cut-body"></div>
+                  <span>チキン</span>
+                </div>
+                <div class="draggable-ingredient" id="om-ing-ketchup" draggable="false">
+                  <div class="ing-ketchup-body"></div>
+                  <span>ケチャップ</span>
+                </div>
+              </div>
+
+              <div class="om-pan-wrapper">
+                <div class="pan om-pan" id="om-rice-pan">
+                  <div class="pan-inside" id="om-rice-pan-inside"></div>
+                </div>
+                <p class="guide-bubble" id="om-pan-guide">ざいりょうを フライパンにいれよう</p>
+              </div>
+            </div>
+          </div>
+
+          <div id="om-stir-area" class="overlay-area" style="display: none;">
+            <div class="knead-box">
+              <div class="pan om-pan large" id="om-stir-pan">
+                <div class="pan-inside">
+                  <div class="chicken-rice-mix" id="om-chicken-rice-mix"></div>
+                </div>
+              </div>
+              <p class="guide-bubble">くるくる まぜて チキンライスにしよう</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ステップ2: たまご -->
+        <section id="om-step-2" class="step-section">
+          <div class="workspace-2 om-workspace-2">
+            <div class="om-egg-area">
+              <div class="bowl om-egg-bowl" id="om-egg-bowl">
+                <div class="bowl-inside">
+                  <div class="egg-liquid" id="om-egg-liquid"></div>
+                </div>
+              </div>
+              <div class="draggable-ingredient om-egg-source" id="om-egg-source">
+                <div class="ing-egg-body"></div>
+                <span>たまご</span>
+              </div>
+              <p class="guide-bubble" id="om-egg-guide">たまごを ボウルに うって まぜよう</p>
+            </div>
+
+            <div class="stove-area">
+              <div class="stove">
+                <div class="burner">
+                  <div class="fire" id="om-stove-fire"></div>
+                </div>
+                <div class="pan" id="om-egg-pan">
+                  <div class="pan-inside" id="om-egg-pan-inside"></div>
+                </div>
+              </div>
+              <div class="om-chicken-rice-tray" id="om-chicken-rice-tray">
+                <div class="rice-mound shaped om-rice-to-place" id="om-chicken-rice-ready"></div>
+                <span class="tray-label">チキンライス</span>
+              </div>
+              <p class="guide-bubble" id="om-egg-pan-guide">たまごを ボウルに うって まぜよう</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ステップ3: かざり -->
+        <section id="om-step-3" class="step-section">
+          <div class="workspace-3 om-workspace-3">
+            <div class="plating-area">
+              <div class="plate large" id="om-final-plate">
+                <div class="plate-inside" id="om-final-plate-inside">
+                  <div class="omelette-cover wrapped-final" id="om-omelette-cover"></div>
+                  <canvas id="om-ketchup-canvas"></canvas>
+                </div>
+              </div>
+              <p class="guide-bubble" id="om-plating-guide">ケチャップで かわいく かざろう</p>
+            </div>
+
+            <div class="side-shelf">
+              <div class="topping-box">
+                <h3>かざり</h3>
+                <div class="toppings-container">
+                  <div class="draggable-topping" id="om-top-parsley" data-type="parsley">
+                    <div class="parsley-icon"></div>
+                    <span>パセリ粉</span>
+                  </div>
+                  <div class="draggable-topping" id="om-top-tomato" data-type="tomato">
+                    <div class="tomato-icon"></div>
+                    <span>ミニトマト</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="sauce-box">
+                <h3>ケチャップ</h3>
+                <div class="sauce-bottles">
+                  <div class="sauce-bottle active" id="om-sauce-ketchup" data-sauce="ketchup">
+                    <div class="bottle-body ketchup"></div>
+                    <span>ケチャップ</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- ===== ピザ ===== -->
+      <div id="pizza-game" class="recipe-game" style="display: none;">
+        <!-- ステップ1: 生地 -->
+        <section id="pz-step-1" class="step-section active">
+          <div class="workspace-1 pz-workspace-1">
+            <div class="bowl-area">
+              <div class="ingredients-shelf pz-shelf">
+                <div class="draggable-ingredient" id="pz-ing-flour" draggable="false">
+                  <div class="ing-flour-body"></div>
+                  <span>こむぎこ</span>
+                </div>
+                <div class="draggable-ingredient" id="pz-ing-water" draggable="false">
+                  <div class="ing-water-body"></div>
+                  <span>みず</span>
+                </div>
+                <div class="draggable-ingredient" id="pz-ing-yeast" draggable="false">
+                  <div class="ing-yeast-body"></div>
+                  <span>こうじ</span>
+                </div>
+              </div>
+
+              <div class="bowl-wrapper">
+                <div class="bowl" id="pz-mixing-bowl">
+                  <div class="bowl-inside" id="pz-bowl-inside"></div>
+                </div>
+                <p class="guide-bubble" id="pz-bowl-guide">ざいりょうを ボウルにいれよう</p>
+              </div>
+            </div>
+          </div>
+
+          <div id="pz-knead-area" class="overlay-area" style="display: none;">
+            <div class="knead-box">
+              <div class="bowl large" id="pz-knead-bowl">
+                <div class="bowl-inside">
+                  <div class="pizza-dough" id="pz-dough"></div>
+                </div>
+              </div>
+              <p class="guide-bubble" id="pz-knead-guide">くるくる こねよう</p>
+            </div>
+          </div>
+
+          <div id="pz-stretch-area" class="overlay-area" style="display: none;">
+            <div class="shape-box">
+              <div class="pz-stretch-board" id="pz-stretch-board">
+                <div class="raw-pizza-dough" id="pz-raw-dough"></div>
+              </div>
+              <p class="guide-bubble" id="pz-stretch-guide">ペチペチ のばして まるくしよう</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ステップ2: のせる -->
+        <section id="pz-step-2" class="step-section">
+          <div class="workspace-3 pz-workspace-topping">
+            <div class="plating-area">
+              <div class="pz-baking-tray" id="pz-baking-tray">
+                <div class="pz-tray-inside" id="pz-tray-inside">
+                  <div class="pizza-dough-base" id="pz-dough-base"></div>
+                </div>
+                <span class="tray-label">ピザの きじ</span>
+              </div>
+              <p class="guide-bubble" id="pz-prep-guide">ソースと チーズと トッピングを のせよう</p>
+            </div>
+
+            <div class="side-shelf">
+              <div class="topping-box">
+                <h3>ソース・チーズ</h3>
+                <div class="toppings-container pz-sauce-cheese-row">
+                  <div class="draggable-ingredient" id="pz-sauce" draggable="false">
+                    <div class="ing-sauce-body"></div>
+                    <span>ソース</span>
+                  </div>
+                  <div class="draggable-ingredient" id="pz-cheese" draggable="false">
+                    <div class="ing-cheese-body"></div>
+                    <span>チーズ</span>
+                  </div>
+                </div>
+              </div>
+              <div class="topping-box">
+                <h3>トッピング</h3>
+                <div class="toppings-container">
+                  <div class="draggable-topping" id="pz-top-pepperoni" data-type="pepperoni">
+                    <div class="pepperoni-icon"></div>
+                    <span>ペパロニ</span>
+                  </div>
+                  <div class="draggable-topping" id="pz-top-mushroom" data-type="mushroom">
+                    <div class="mushroom-icon"></div>
+                    <span>きのこ</span>
+                  </div>
+                  <div class="draggable-topping" id="pz-top-pepper" data-type="bellpepper">
+                    <div class="bellpepper-icon"></div>
+                    <span>ピーマン</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ステップ3: やく -->
+        <section id="pz-step-3" class="step-section">
+          <div class="workspace-2 pz-workspace-bake">
+            <div class="pz-bake-prep" id="pz-bake-prep">
+              <div class="pz-oven-area">
+                <div class="pizza-oven" id="pz-oven">
+                  <div class="oven-body">
+                    <div class="oven-window" id="pz-oven-window">
+                      <div class="oven-inside" id="pz-oven-inside"></div>
+                      <div class="oven-fire" id="pz-oven-fire"></div>
+                    </div>
+                    <div class="oven-door" id="pz-oven-door"></div>
+                  </div>
+                </div>
+                <p class="guide-bubble" id="pz-oven-guide">ピザを オーブンに いれて やこう</p>
+              </div>
+              <div class="pz-tray-slot" id="pz-tray-slot">
+                <div class="pz-baking-tray pz-tray-to-oven" id="pz-baking-tray-step3">
+                  <div class="pz-tray-inside" id="pz-tray-inside-step3"></div>
+                  <span class="tray-label">やく まえの ピザ</span>
+                </div>
+              </div>
+            </div>
+            <div class="pz-finish-area" id="pz-finish-area" style="display: none;">
+              <div class="plate large" id="pz-final-plate">
+                <div class="plate-inside" id="pz-final-plate-inside"></div>
+              </div>
+              <p class="guide-bubble">おいしそうな ピザが できたね！</p>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- コントロール・メッセージエリア -->
+    <footer>
+      <div id="footer-message">なにを つくる？</div>
+      <button id="next-step-btn" style="display: none;">つぎへ すすむ ➔</button>
+      <button id="restart-btn" style="display: none;">もういちど つくる ↺</button>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

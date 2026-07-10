@@ -1,0 +1,3095 @@
+/* ==========================================
+   デザインシステム & 基本設定
+   ========================================== */
+:root {
+  /* 温かみのあるアースカラー＆パステルパレット */
+  --bg-color: #f7eedf;          /* 温かいアイボリー */
+  --table-color: #e5c59e;       /* 木目調ベースカラー */
+  --wood-grain-1: #dbb386;      /* 木目ライン1 */
+  --wood-grain-2: #cca273;      /* 木目ライン2 */
+  
+  --primary-color: #795548;     /* 優しいココアブラウン */
+  --primary-light: #efebe9;
+  --accent-color: #ff8a65;      /* 柔らかなテラコッタオレンジ */
+  --accent-green: #a1887f;      /* くすんだウッドグリーン */
+  --leaf-green: #81c784;        /* 優しいブロッコリーグリーン */
+  
+  --text-dark: #4e342e;         /* 濃いココア色 */
+  --text-light: #ffffff;
+  
+  --shadow-color: rgba(78, 52, 46, 0.15);
+  --shadow-active: rgba(78, 52, 46, 0.3);
+  
+  /* 調理器具や食材の色 */
+  --bowl-color: #e0f2f1;        /* ミントセラミック */
+  --bowl-rim: #b2dfdb;
+  --pan-color: #37474f;         /* 鉄の鋳物風 */
+  --plate-color: #fafafa;       /* 白磁器 */
+  --plate-border: #f0f0f0;
+  
+  --raw-meat-color: #ef9a9a;    /* 生のひき肉のピンク */
+  --cooked-meat-color: #8d6e63;  /* 焼けた肉色 */
+  --burnt-meat-color: #5d4037;   /* よく焼けた肉色 */
+  
+  /* フォント */
+  --font-family: 'Zen Maru Gothic', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--bg-color);
+  color: var(--text-dark);
+  height: 100dvh;
+  min-height: 100dvh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+}
+
+/* ゲーム全体の容器 - アスペクト比4:3を維持して画面にフィット */
+#game-container {
+  width: 100vw;
+  height: calc(100vw * 3 / 4);
+  max-width: 1024px;
+  max-height: 768px;
+  background-color: #ffffff;
+  border-radius: 32px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+  border: 8px solid #ffffff;
+  touch-action: none; /* スマホでのスクロールやダブルタップ拡大を防止 */
+}
+
+@media (min-aspect-ratio: 4/3) {
+  #game-container {
+    height: 100dvh;
+    width: calc(100dvh * 4 / 3);
+  }
+}
+
+/* スマホ縦画面：画面いっぱいに広げて作業エリアを確保 */
+@media (max-aspect-ratio: 4/3) {
+  #game-container {
+    width: 100vw;
+    height: 100dvh;
+    max-width: none;
+    max-height: none;
+    border-radius: 0;
+    border-width: 0;
+  }
+
+  header {
+    height: 72px;
+    padding: 0 16px;
+  }
+
+  header h1 {
+    font-size: 18px;
+  }
+
+  .steps-nav {
+    gap: 8px;
+  }
+
+  .step-indicator {
+    padding: 6px 10px;
+  }
+
+  .step-text {
+    font-size: 13px;
+  }
+
+  footer {
+    height: 72px;
+    padding: 0 16px;
+  }
+
+  #footer-message {
+    font-size: 15px;
+  }
+
+  .step-section.active {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .workspace-1,
+  .workspace-2,
+  .workspace-3,
+  .pz-workspace-2 {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .cutting-board {
+    width: min(240px, 80vw);
+    height: min(300px, 42vh);
+  }
+
+  .bowl {
+    width: min(240px, 70vw);
+    height: min(240px, 70vw);
+  }
+
+  .pz-workspace-1 .bowl-area {
+    width: 100%;
+    max-width: 360px;
+    margin: 0 auto;
+  }
+}
+
+
+
+/* ==========================================
+   ヘッダー & ナビゲーション
+   ========================================== */
+header {
+  height: 90px;
+  background-color: #ffffff;
+  border-bottom: 3px dashed var(--primary-light);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 40px;
+  z-index: 10;
+}
+
+header h1 {
+  font-size: 24px;
+  color: var(--primary-color);
+  font-weight: 700;
+  letter-spacing: 1px;
+  flex: 1;
+  text-align: center;
+}
+
+.back-btn {
+  font-family: var(--font-family);
+  font-size: 14px;
+  font-weight: 700;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 16px;
+  cursor: pointer;
+  background-color: var(--primary-light);
+  color: var(--primary-color);
+  box-shadow: 0 3px 8px var(--shadow-color);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.back-btn:hover {
+  transform: scale(1.05);
+  background-color: #e0d5cf;
+}
+
+.steps-nav {
+  display: flex;
+  gap: 20px;
+}
+
+.step-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  background-color: var(--primary-light);
+  color: var(--text-dark);
+  opacity: 0.5;
+  transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.step-indicator.active {
+  opacity: 1;
+  background-color: var(--accent-color);
+  color: var(--text-light);
+  box-shadow: 0 4px 10px rgba(255, 138, 101, 0.3);
+  transform: scale(1.05);
+}
+
+.step-num {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.step-text {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+/* ==========================================
+   メイン作業台（木目調テーブル）
+   ========================================== */
+#kitchen-table {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+  /* 木目テクスチャ画像に置き換え推奨 */
+  background: linear-gradient(180deg, #f5e8c7 0%, #e8d5a3 100%);
+  box-shadow: inset 0 10px 30px rgba(0,0,0,0.05);
+  overflow: hidden;
+}
+
+/* ステップごとのセクション管理 */
+.step-section {
+  display: none;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+  padding: 30px 40px;
+}
+
+.step-section.active {
+  display: block;
+  opacity: 1;
+}
+
+/* ガイドの吹き出し */
+.guide-bubble {
+  background-color: #ffffff;
+  color: var(--text-dark);
+  padding: 12px 24px;
+  border-radius: 20px;
+  font-size: 18px;
+  font-weight: 700;
+  text-align: center;
+  box-shadow: 0 6px 15px var(--shadow-color);
+  margin-top: 20px;
+  position: relative;
+  display: inline-block;
+  align-self: center;
+  transition: all 0.3s ease;
+  border: 3px solid var(--primary-light);
+}
+
+.guide-bubble::after {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 0 10px 10px 10px;
+  border-style: solid;
+  border-color: transparent transparent #ffffff transparent;
+}
+
+/* ==========================================
+   レイアウト: ステップ1
+   ========================================== */
+.workspace-1 {
+  display: grid;
+  grid-template-columns: 1.1fr 1.9fr;
+  height: 100%;
+  gap: 30px;
+}
+
+/* まな板エリア */
+.cutting-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.cutting-board {
+  width: 280px;
+  height: 380px;
+  background: linear-gradient(145deg, #f5e8c7 0%, #e8d5a3 100%);
+  border-radius: 24px;
+  box-shadow: 
+    0 12px 0 #e4bd93,
+    0 16px 25px var(--shadow-color);
+  border: 4px solid #fffdfa;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* たまねぎのCSSイラスト */
+.onion {
+  width: 160px;
+  height: 160px;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.onion-body {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(145deg, #fafafa 0%, #f0f0f0 100%);
+  border-radius: 50% 50% 45% 45% / 60% 60% 40% 40%;
+  border: 4px solid #cbb281;
+  position: relative;
+  box-shadow: 0 10px 15px rgba(0,0,0,0.08);
+}
+
+/* たまねぎの頭のチョン（芽/根の部分） */
+.onion-body::before {
+  content: '';
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 24px;
+  height: 18px;
+  background-color: #bfa571;
+  clip-path: polygon(25% 100%, 50% 0%, 75% 100%);
+}
+
+.onion-body::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 8px;
+  background-color: #a38956;
+  border-radius: 50%;
+}
+
+.onion-line {
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 75%;
+  height: 80%;
+  border-left: 2px dashed rgba(188, 163, 117, 0.4);
+  border-right: 2px dashed rgba(188, 163, 117, 0.4);
+  border-radius: 50%;
+}
+
+/* 切られたたまねぎのピース */
+.onion-pieces {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  display: none;
+}
+
+.onion-piece {
+  position: absolute;
+  background-color: #fffdec;
+  border: 2px solid #dcd1ab;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* ボウルと材料エリア */
+.bowl-area {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.ingredients-shelf {
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 20px;
+  padding: 15px 25px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  box-shadow: inset 0 2px 8px rgba(0,0,0,0.05);
+  border: 2px solid rgba(255, 255, 255, 0.8);
+}
+
+.draggable-ingredient {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: grab;
+  position: relative;
+  transition: transform 0.2s ease;
+  touch-action: none;
+}
+
+.draggable-ingredient.dragging {
+  cursor: grabbing;
+  z-index: 100;
+  transform: scale(1.15);
+  pointer-events: none; /* 下の要素の当たり判定を通すため */
+}
+
+.draggable-ingredient span {
+  font-size: 14px;
+  font-weight: 700;
+  margin-top: 8px;
+  background-color: #ffffff;
+  padding: 4px 10px;
+  border-radius: 12px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+/* 各食材のCSSビジュアル */
+/* 1. ひき肉 */
+.ing-meat-body {
+  width: 70px;
+  height: 70px;
+  background: linear-gradient(145deg, #c62828 0%, #b71c1c 100%);
+  border-radius: 18px;
+  border: 4px solid #e57373;
+  box-shadow: 0 6px 10px var(--shadow-color);
+  position: relative;
+}
+.ing-meat-body::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 54px;
+  height: 54px;
+  background-image: 
+    radial-gradient(circle at 25% 25%, #ef5350 0 2.5px, transparent 3px),
+    radial-gradient(circle at 45% 35%, #b71c1c 0 2px, transparent 2.5px),
+    radial-gradient(circle at 65% 55%, #ef5350 0 2.5px, transparent 3px),
+    radial-gradient(circle at 35% 70%, #b71c1c 0 2px, transparent 2.5px),
+    radial-gradient(circle at 75% 25%, #ef5350 0 2px, transparent 2.5px),
+    radial-gradient(circle at 55% 80%, #b71c1c 0 2.5px, transparent 3px);
+  background-size: 14px 14px;
+  background-position: 0 0, 7px 7px;
+  opacity: 0.9;
+}
+
+/* 2. 切ったたまねぎ（トレイ） */
+.ing-onion-body {
+  width: 70px;
+  height: 70px;
+  background: linear-gradient(145deg, #fafafa 0%, #f0f0f0 100%);
+  border-radius: 50%;
+  box-shadow: 0 6px 10px var(--shadow-color);
+  position: relative;
+}
+.ing-onion-body::after {
+  content: '';
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: 
+    radial-gradient(circle, transparent 38%, #e8d5a3 39%, #e8d5a3 42%, transparent 43%),
+    radial-gradient(circle, transparent 52%, #e8d5a3 53%, #e8d5a3 56%, transparent 57%),
+    radial-gradient(circle, transparent 66%, #e8d5a3 67%, #e8d5a3 70%, transparent 71%);
+  opacity: 0.6;
+}
+
+/* 3. たまご */
+.ing-egg-body {
+  width: 60px;
+  height: 75px;
+  background: linear-gradient(145deg, #fff9c4 0%, #fff59d 100%);
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  border: 4px solid #ffb300;
+  box-shadow: 0 6px 10px var(--shadow-color);
+  position: relative;
+}
+.ing-egg-body::after {
+  content: '';
+  position: absolute;
+  top: 15%;
+  left: 20%;
+  width: 26%;
+  height: 22%;
+  background: linear-gradient(135deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.25) 55%, transparent 100%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* 4. パン粉 */
+.ing-breadcrumbs-body {
+  width: 75px;
+  height: 60px;
+  background: linear-gradient(145deg, #fff8e1 0%, #ffe082 100%);
+  border-radius: 30px 30px 10px 10px;
+  border: 4px solid #ffb74d;
+  box-shadow: 0 6px 10px var(--shadow-color);
+  position: relative;
+}
+.ing-breadcrumbs-body::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 56px;
+  height: 42px;
+  background-image: 
+    radial-gradient(circle, #ffe082 0 1.5px, transparent 2px),
+    radial-gradient(circle, #ffb74d 0 1.2px, transparent 1.8px),
+    radial-gradient(circle, #ffe082 0 1.5px, transparent 2px),
+    radial-gradient(circle, #ffb74d 0 1.2px, transparent 1.8px),
+    radial-gradient(circle, #ffe082 0 1.5px, transparent 2px),
+    radial-gradient(circle, #ffb74d 0 1.2px, transparent 1.8px);
+  background-size: 10px 10px;
+  background-position: 0 0, 5px 3px, 10px 8px, 3px 12px, 8px 18px, 2px 22px;
+  opacity: 0.9;
+}
+
+/* ボウルのスタイリング */
+.bowl-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 15px;
+}
+
+.bowl {
+  width: 300px;
+  height: 300px;
+  background: linear-gradient(145deg, #f5f5f5 0%, #e0e0e0 100%);
+  border-radius: 50%;
+  border: 12px solid var(--bowl-rim);
+  box-shadow: 
+    0 15px 35px var(--shadow-color),
+    inset 0 10px 20px rgba(0,0,0,0.06);
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  touch-action: none;
+}
+
+.bowl-inside {
+  width: 85%;
+  height: 85%;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.03);
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 8px 15px rgba(0,0,0,0.1);
+}
+
+/* ボウルの中に投入された食材たちの表現 */
+.bowl-inside .added-ingredient {
+  position: absolute;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* こねる・成形用のオーバーレイエリア */
+.overlay-area {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(247, 238, 223, 0.95); /* 背景色と同一にして自然に見せる */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 5;
+}
+
+.knead-box, .shape-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.bowl.large {
+  width: 360px;
+  height: 360px;
+}
+
+/* お肉の生地 */
+.meat-dough {
+  width: 180px;
+  height: 180px;
+  background-color: var(--raw-meat-color);
+  border-radius: 50%;
+  border: 6px solid #e57373;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  transition: background-color 0.5s ease, border-color 0.5s ease, border-radius 0.2s ease, width 0.2s ease, height 0.2s ease;
+  touch-action: none;
+}
+
+/* 成形トレー */
+.shaping-tray {
+  width: 420px;
+  height: 280px;
+  background-color: #fafafa;
+  border-radius: 20px;
+  border: 10px solid #eceff1;
+  box-shadow: 
+    0 12px 25px var(--shadow-color),
+    inset 0 4px 10px rgba(0,0,0,0.05);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.raw-patty {
+  width: 220px;
+  height: 150px;
+  background-color: var(--raw-meat-color);
+  background-image:
+    linear-gradient(135deg, rgba(0,0,0,0.06) 0%, rgba(0,0,0,0.02) 50%, rgba(0,0,0,0.06) 100%),
+    repeating-radial-gradient(circle at 30% 40%, rgba(255,255,255,0.35) 0 2px, transparent 3px 12px),
+    repeating-radial-gradient(circle at 65% 70%, rgba(255,255,255,0.25) 0 1.5px, transparent 2.5px 9px);
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  border: 6px solid #e57373;
+  box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: transform 0.15s ease-out, border-radius 0.3s ease;
+}
+
+/* ==========================================
+   レイアウト: ステップ2（焼く）
+   ========================================== */
+.workspace-2 {
+  display: grid;
+  grid-template-columns: 1.5fr 1.5fr;
+  height: 100%;
+  gap: 40px;
+}
+
+.stove-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.stove {
+  width: 340px;
+  height: 340px;
+  background: linear-gradient(145deg, #37474f 0%, #263238 100%);
+  border: 8px solid #eceff1;
+  border-radius: 40px;
+  box-shadow: 
+    0 15px 30px var(--shadow-color),
+    inset 0 4px 10px rgba(255,255,255,0.5);
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.burner {
+  width: 180px;
+  height: 180px;
+  background-color: #78909c;
+  border-radius: 50%;
+  border: 6px solid #cfd8dc;
+  box-shadow: inset 0 4px 10px rgba(0,0,0,0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 優しく揺らめく炎（インジケータ） */
+.fire {
+  width: 100px;
+  height: 100px;
+  background: radial-gradient(circle at 50% 80%, #ff8a65 20%, #ff7043 50%, transparent 70%);
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  animation: flicker 1s infinite alternate;
+}
+
+@keyframes flicker {
+  0% { transform: scale(0.95); opacity: 0.6; }
+  100% { transform: scale(1.05); opacity: 0.8; }
+}
+
+.pan {
+  width: 280px;
+  height: 280px;
+  background: linear-gradient(145deg, #455a64 0%, #37474f 100%);
+  border-radius: 50%;
+  border: 10px solid #263238;
+  position: absolute;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* フライパンの持ち手 */
+.pan::before {
+  content: '';
+  position: absolute;
+  bottom: -90px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 32px;
+  height: 100px;
+  background-color: #8d6e63; /* 木製ハンドル */
+  border: 4px solid #5d4037;
+  border-radius: 0 0 10px 10px;
+  z-index: -1;
+  box-shadow: 0 5px 10px rgba(0,0,0,0.15);
+}
+
+.pan-inside {
+  width: 88%;
+  height: 88%;
+  border-radius: 50%;
+  background-color: #212121;
+  position: relative;
+  box-shadow: inset 0 8px 16px rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 焼くときに出る優しい煙（小さな泡） */
+.steam-bubble {
+  position: absolute;
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: floatUp 1.5s infinite linear;
+}
+
+@keyframes floatUp {
+  0% { transform: translateY(20px) scale(0.5); opacity: 0; }
+  50% { opacity: 0.5; }
+  100% { transform: translateY(-40px) scale(1.2); opacity: 0; }
+}
+
+/* お皿エリア */
+.plate-area {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+}
+
+.tray {
+  width: 300px;
+  height: 180px;
+  background-color: #fafafa;
+  border-radius: 20px;
+  border: 8px solid #eceff1;
+  box-shadow: inset 0 4px 8px rgba(0,0,0,0.05), 0 8px 20px var(--shadow-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.patty-to-cook {
+  width: 180px;
+  height: 120px;
+  background-color: var(--raw-meat-color);
+  border-radius: 50%;
+  border: 5px solid #e57373;
+  cursor: grab;
+  touch-action: none;
+  transition: transform 0.2s ease;
+  z-index: 10;
+}
+.patty-to-cook.dragging {
+  cursor: grabbing;
+  transform: scale(1.1);
+  box-shadow: 0 15px 25px rgba(0,0,0,0.15);
+}
+
+/* フライパンやお皿の上にのった調理中のハンバーグ */
+.patty-on-pan {
+  width: 170px;
+  height: 110px;
+  background-color: var(--raw-meat-color);
+  background-image:
+    linear-gradient(135deg, rgba(0,0,0,0.06) 0%, rgba(0,0,0,0.02) 50%, rgba(0,0,0,0.06) 100%),
+    repeating-radial-gradient(circle at 30% 40%, rgba(255,255,255,0.35) 0 2px, transparent 3px 12px),
+    repeating-radial-gradient(circle at 65% 70%, rgba(255,255,255,0.25) 0 1.5px, transparent 2.5px 9px);
+  border-radius: 50%;
+  border: 5px solid #e57373;
+  transition: background-color 5s linear, border-color 5s linear, transform 0.5s ease;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ひっくり返すときのアニメーション用クラス */
+.patty-on-pan.flip {
+  animation: flipPatty 0.5s ease-out;
+}
+
+@keyframes flipPatty {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2) rotateX(90deg); }
+  100% { transform: scale(1) rotateX(180deg); }
+}
+
+.patty-on-pan.cooked {
+  background-color: var(--cooked-meat-color);
+  border-color: #5d4037;
+}
+
+.patty-on-pan.burnt {
+  background-color: var(--burnt-meat-color);
+  border-color: #3e2723;
+}
+
+/* 休ませる大皿 */
+.plate {
+  width: 320px;
+  height: 180px;
+  background: linear-gradient(145deg, #fafafa 0%, #f5f5f5 100%);
+  border: 8px solid var(--plate-border);
+  border-radius: 50%;
+  box-shadow: 
+    0 10px 20px var(--shadow-color),
+    inset 0 4px 8px rgba(0,0,0,0.03);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.plate-inside {
+  width: 88%;
+  height: 88%;
+  border-radius: 50%;
+  border: 2px dashed #e0e0e0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ==========================================
+   レイアウト: ステップ3（盛り付け）
+   ========================================== */
+.workspace-3 {
+  display: grid;
+  grid-template-columns: 1.8fr 1.2fr;
+  height: 100%;
+  gap: 30px;
+}
+
+.plating-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.plate.large {
+  width: 420px;
+  height: 320px;
+  border-radius: 50%;
+  background-color: var(--plate-color);
+  border: 12px solid var(--plate-border);
+}
+
+.plate.large .plate-inside {
+  width: 90%;
+  height: 90%;
+  border: 3px solid #f0f0f0;
+  position: relative;
+}
+
+/* 最終配置されたハンバーグ */
+.cooked-patty-final {
+  width: 200px;
+  height: 130px;
+  background-color: var(--cooked-meat-color);
+  background-image:
+    linear-gradient(135deg, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0.03) 50%, rgba(0,0,0,0.08) 100%),
+    repeating-radial-gradient(circle at 30% 40%, rgba(255,255,255,0.22) 0 2px, transparent 3px 12px),
+    repeating-radial-gradient(circle at 65% 70%, rgba(255,255,255,0.15) 0 1.5px, transparent 2.5px 9px);
+  border-radius: 50%;
+  border: 5px solid #5d4037;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+}
+
+/* ソース用キャンバス */
+#sauce-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+  pointer-events: auto; /* マウスイベントを受け取る */
+  border-radius: 50%;
+}
+
+/* 盛り付けトッピング野菜のコンテナ */
+.placed-topping {
+  position: absolute;
+  z-index: 4;
+  cursor: grab;
+  transition: transform 0.2s ease;
+}
+
+/* サイドシェルフ */
+.side-shelf {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.topping-box, .sauce-box {
+  background-color: rgba(255, 255, 255, 0.6);
+  border-radius: 24px;
+  padding: 20px;
+  box-shadow: 0 8px 20px var(--shadow-color);
+  border: 2px solid rgba(255,255,255,0.8);
+}
+
+.topping-box h3, .sauce-box h3 {
+  font-size: 16px;
+  color: var(--primary-color);
+  margin-bottom: 12px;
+  text-align: center;
+  border-bottom: 2px solid var(--primary-light);
+  padding-bottom: 6px;
+}
+
+.toppings-container {
+  display: flex;
+  justify-content: space-around;
+  gap: 10px;
+}
+
+.draggable-topping {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: grab;
+  transition: transform 0.2s ease;
+  touch-action: none;
+}
+
+.draggable-topping.dragging {
+  cursor: grabbing;
+  z-index: 100;
+  transform: scale(1.2);
+}
+
+.draggable-topping span {
+  font-size: 12px;
+  font-weight: 700;
+  margin-top: 6px;
+}
+
+/* トッピングのCSSアイコン */
+/* 1. ブロッコリー */
+.broccoli-icon {
+  width: 55px;
+  height: 55px;
+  background-color: var(--leaf-green);
+  background-image:
+    radial-gradient(circle at 30% 30%, #388e3c 0 3px, transparent 4px),
+    radial-gradient(circle at 55% 25%, #4caf50 0 2.5px, transparent 3.5px),
+    radial-gradient(circle at 75% 40%, #66bb6a 0 3px, transparent 4px),
+    radial-gradient(circle at 40% 60%, #388e3c 0 2px, transparent 3px),
+    radial-gradient(circle at 65% 70%, #4caf50 0 2.5px, transparent 3.5px);
+  border-radius: 50% 50% 10px 10px;
+  border: 4px solid #4caf50;
+  box-shadow: 0 4px 8px var(--shadow-color);
+  position: relative;
+}
+.broccoli-icon::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 14px;
+  height: 14px;
+  background-color: #81c784;
+  border-radius: 2px;
+}
+
+/* 2. にんじん */
+.carrot-icon {
+  width: 55px;
+  height: 55px;
+  background: linear-gradient(145deg, #ff9800 0%, #fb8c00 45%, #ff9800 55%, #f57c00 100%);
+  clip-path: polygon(50% 100%, 15% 15%, 85% 15%);
+  box-shadow: 0 4px 8px var(--shadow-color);
+  position: relative;
+}
+.carrot-icon::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 14px;
+  height: 10px;
+  background-color: #4caf50;
+  border-radius: 50% 50% 0 0;
+}
+
+/* 3. ミニトマト */
+.tomato-icon {
+  width: 50px;
+  height: 50px;
+  background: radial-gradient(circle at 30% 30%, #ef5350 0%, #f44336 55%, #d32f2f 100%);
+  border-radius: 50%;
+  border: 3px solid #d32f2f;
+  box-shadow: 0 4px 8px var(--shadow-color);
+  position: relative;
+}
+.tomato-icon::after {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 12px;
+  height: 8px;
+  background-color: #4caf50;
+  border-radius: 50% 50% 0 0;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+/* ソースボトル */
+.sauce-bottles {
+  display: flex;
+  justify-content: space-around;
+  gap: 15px;
+}
+
+.sauce-bottle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.sauce-bottle.active {
+  transform: scale(1.1);
+}
+
+.sauce-bottle.active .bottle-body {
+  border-color: var(--accent-color);
+  box-shadow: 0 8px 16px rgba(255, 138, 101, 0.4);
+}
+
+.sauce-bottle span {
+  font-size: 12px;
+  font-weight: 700;
+  margin-top: 6px;
+}
+
+.bottle-body {
+  width: 45px;
+  height: 75px;
+  border-radius: 12px 12px 6px 6px;
+  border: 3px solid #ccc;
+  box-shadow: 0 4px 8px var(--shadow-color);
+  position: relative;
+  cursor: pointer;
+}
+
+.bottle-body::after {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 12px;
+  height: 10px;
+  background-color: #fff;
+  border: 2px solid #ccc;
+  border-radius: 4px 4px 0 0;
+}
+
+.bottle-body.ketchup {
+  background-color: #e53935;
+}
+
+.bottle-body.brown {
+  background-color: #3e2723;
+}
+
+/* ドラッグ中のソースボトルの見た目（先端から出す感覚を出すため） */
+.sauce-bottle-draw {
+  position: absolute;
+  width: 45px;
+  height: 75px;
+  z-index: 100;
+  pointer-events: none;
+  transform-origin: top center;
+  transform: rotate(135deg); /* 注ぐ角度に傾ける */
+}
+
+/* ==========================================
+   フッター (メッセージ・ボタン)
+   ========================================== */
+footer {
+  height: 100px;
+  background-color: #ffffff;
+  border-top: 3px dashed var(--primary-light);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 40px;
+  z-index: 10;
+}
+
+#footer-message {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-dark);
+}
+
+button {
+  font-family: var(--font-family);
+  font-size: 18px;
+  font-weight: 700;
+  padding: 12px 28px;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+}
+
+#next-step-btn {
+  background-color: var(--accent-color);
+  color: var(--text-light);
+}
+
+#next-step-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(255, 138, 101, 0.4);
+}
+
+#restart-btn {
+  background-color: var(--primary-color);
+  color: var(--text-light);
+}
+
+#restart-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(121, 85, 72, 0.4);
+}
+
+/* ==========================================
+   材料ボウルインのビジュアル
+   ========================================== */
+.added-meat {
+  width: 140px;
+  height: 140px;
+  background-color: var(--raw-meat-color);
+  border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+  border: 4px solid #e57373;
+  left: 20%;
+  top: 20%;
+}
+
+.added-onion {
+  width: 120px;
+  height: 120px;
+  background-color: #fffdec;
+  border: 4px solid #d2c59d;
+  border-radius: 40% 60% 50% 50% / 50% 50% 50% 50%;
+  opacity: 0.9;
+  left: 35%;
+  top: 30%;
+}
+
+.added-egg {
+  width: 80px;
+  height: 80px;
+  background: radial-gradient(circle at 35% 35%, #ffffff 0%, #ffe082 80%, #ffd54f 100%);
+  border: 4px solid #ffb300;
+  border-radius: 50%;
+  left: 45%;
+  top: 15%;
+}
+
+.added-breadcrumbs {
+  width: 130px;
+  height: 110px;
+  background-color: #ffe0b2;
+  border: 4px solid #ffb74d;
+  border-radius: 60% 40% 30% 70% / 60% 50% 50% 40%;
+  left: 25%;
+  top: 40%;
+}
+
+/* 高さの低い画面（スマホ横画面など）でのサイズ微調整 */
+@media (max-height: 600px) {
+  #game-container {
+    border-radius: 16px;
+    border-width: 4px;
+  }
+
+  header {
+    height: 60px;
+    padding: 0 20px;
+  }
+
+  header h1 {
+    font-size: 18px;
+  }
+
+  .steps-nav {
+    gap: 10px;
+  }
+
+  .step-indicator {
+    padding: 4px 10px;
+    border-radius: 12px;
+  }
+
+  .step-num {
+    width: 18px;
+    height: 18px;
+    font-size: 11px;
+  }
+
+  .step-text {
+    font-size: 12px;
+  }
+
+  /* メイン作業スペースの余白 */
+  .step-section {
+    padding: 15px 20px;
+  }
+
+  .guide-bubble {
+    font-size: 14px;
+    padding: 8px 16px;
+    margin-top: 10px;
+  }
+
+  /* ステップ1 */
+  .workspace-1 {
+    gap: 15px;
+  }
+
+  .cutting-board {
+    width: 200px;
+    height: 270px;
+    border-radius: 16px;
+    box-shadow: 
+      0 8px 0 #e4bd93,
+      0 10px 15px var(--shadow-color);
+  }
+
+  .onion {
+    width: 100px;
+    height: 100px;
+  }
+
+  .onion-body {
+    border-width: 3px;
+  }
+
+  .onion-body::before {
+    top: -9px;
+    width: 16px;
+    height: 12px;
+  }
+
+  .ingredients-shelf {
+    padding: 8px 15px;
+  }
+
+  .draggable-ingredient span {
+    font-size: 11px;
+    padding: 2px 8px;
+    margin-top: 4px;
+  }
+
+  .ing-meat-body, .ing-onion-body {
+    width: 50px;
+    height: 50px;
+    border-width: 3px;
+  }
+
+  .ing-egg-body {
+    width: 42px;
+    height: 52px;
+    border-width: 3px;
+  }
+
+  .ing-breadcrumbs-body {
+    width: 52px;
+    height: 42px;
+    border-width: 3px;
+  }
+
+  .bowl-wrapper {
+    margin-top: 5px;
+  }
+
+  .bowl {
+    width: 200px;
+    height: 200px;
+    border-width: 8px;
+  }
+
+  .bowl.large {
+    width: 250px;
+    height: 250px;
+  }
+
+  .meat-dough {
+    width: 120px;
+    height: 120px;
+  }
+
+  .shaping-tray {
+    width: 300px;
+    height: 200px;
+    border-width: 6px;
+  }
+
+  .raw-patty {
+    width: 160px;
+    height: 110px;
+    border-width: 4px;
+  }
+
+  /* ステップ2 */
+  .workspace-2 {
+    gap: 20px;
+  }
+
+  .stove {
+    width: 230px;
+    height: 230px;
+    border-radius: 25px;
+  }
+
+  .burner {
+    width: 120px;
+    height: 120px;
+  }
+
+  .pan {
+    width: 190px;
+    height: 190px;
+    border-width: 6px;
+  }
+
+  .pan::before {
+    bottom: -60px;
+    width: 22px;
+    height: 70px;
+  }
+
+  .patty-to-cook {
+    width: 130px;
+    height: 85px;
+    border-width: 4px;
+  }
+
+  .patty-on-pan {
+    width: 120px;
+    height: 80px;
+    border-width: 4px;
+  }
+
+  .tray {
+    width: 220px;
+    height: 130px;
+  }
+
+  .plate {
+    width: 230px;
+    height: 130px;
+    border-width: 6px;
+  }
+
+  /* ステップ3 */
+  .workspace-3 {
+    gap: 20px;
+  }
+
+  .plate.large {
+    width: 300px;
+    height: 220px;
+    border-width: 8px;
+  }
+
+  .cooked-patty-final {
+    width: 140px;
+    height: 90px;
+    border-width: 4px;
+  }
+
+  .side-shelf {
+    gap: 10px;
+  }
+
+  .topping-box, .sauce-box {
+    padding: 10px 15px;
+    border-radius: 16px;
+  }
+
+  .topping-box h3, .sauce-box h3 {
+    font-size: 13px;
+    margin-bottom: 6px;
+    padding-bottom: 3px;
+  }
+
+  .toppings-container {
+    gap: 5px;
+  }
+
+  .draggable-topping span, .sauce-bottle span {
+    font-size: 11px;
+    margin-top: 4px;
+  }
+
+  .broccoli-icon {
+    width: 40px;
+    height: 40px;
+    border-width: 3px;
+  }
+
+  .broccoli-icon::after {
+    bottom: -8px;
+    width: 10px;
+    height: 10px;
+  }
+
+  .carrot-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .tomato-icon {
+    width: 36px;
+    height: 36px;
+    border-width: 2px;
+  }
+
+  .sauce-bottles {
+    gap: 10px;
+  }
+
+  .bottle-body {
+    width: 32px;
+    height: 52px;
+    border-width: 2px;
+  }
+
+  .bottle-body::after {
+    top: -7px;
+    width: 8px;
+    height: 7px;
+    border-width: 1px;
+  }
+
+  /* フッター */
+  footer {
+    height: 70px;
+    padding: 0 30px;
+  }
+
+  #footer-message {
+    font-size: 15px;
+  }
+
+  button {
+    font-size: 14px;
+    padding: 8px 20px;
+  }
+
+  /* 投入された肉などの調整 */
+  .added-meat {
+    width: 90px;
+    height: 90px;
+  }
+
+  .added-onion {
+    width: 80px;
+    height: 80px;
+  }
+
+  .added-egg {
+    width: 50px;
+    height: 50px;
+  }
+
+  .added-breadcrumbs {
+    width: 90px;
+    height: 75px;
+  }
+}
+
+/* さらに高さの低い極小画面（スマホ横画面など）向け */
+@media (max-height: 450px) {
+  #game-container {
+    border-radius: 12px;
+    border-width: 2px;
+  }
+
+  header {
+    height: 45px;
+    padding: 0 15px;
+  }
+
+  header h1 {
+    font-size: 14px;
+  }
+
+  .steps-nav {
+    gap: 8px;
+  }
+
+  .step-indicator {
+    padding: 3px 8px;
+    border-radius: 8px;
+  }
+
+  .step-num {
+    width: 14px;
+    height: 14px;
+    font-size: 9px;
+  }
+
+  .step-text {
+    font-size: 10px;
+  }
+
+  .step-section {
+    padding: 8px 15px;
+  }
+
+  .guide-bubble {
+    font-size: 12px;
+    padding: 5px 12px;
+    margin-top: 5px;
+    border-width: 2px;
+  }
+
+  /* ステップ1 */
+  .workspace-1 {
+    gap: 10px;
+  }
+
+  .cutting-board {
+    width: 150px;
+    height: 190px;
+    border-radius: 12px;
+    box-shadow: 
+      0 5px 0 #e4bd93,
+      0 6px 10px var(--shadow-color);
+    border-width: 2px;
+  }
+
+  .onion {
+    width: 70px;
+    height: 70px;
+  }
+
+  .ingredients-shelf {
+    padding: 5px 10px;
+    border-radius: 12px;
+  }
+
+  .draggable-ingredient span {
+    font-size: 9px;
+    padding: 1px 6px;
+    margin-top: 2px;
+  }
+
+  .ing-meat-body, .ing-onion-body {
+    width: 38px;
+    height: 38px;
+    border-width: 2px;
+  }
+
+  .ing-egg-body {
+    width: 30px;
+    height: 38px;
+    border-width: 2px;
+  }
+
+  .ing-breadcrumbs-body {
+    width: 38px;
+    height: 30px;
+    border-width: 2px;
+  }
+
+  .bowl-wrapper {
+    margin-top: 3px;
+  }
+
+  .bowl {
+    width: 140px;
+    height: 140px;
+    border-width: 6px;
+  }
+
+  .bowl.large {
+    width: 170px;
+    height: 170px;
+  }
+
+  .meat-dough {
+    width: 80px;
+    height: 80px;
+  }
+
+  .shaping-tray {
+    width: 220px;
+    height: 140px;
+    border-width: 4px;
+    border-radius: 12px;
+  }
+
+  .raw-patty {
+    width: 110px;
+    height: 75px;
+    border-width: 3px;
+  }
+
+  /* ステップ2 */
+  .workspace-2 {
+    gap: 15px;
+  }
+
+  .stove {
+    width: 160px;
+    height: 160px;
+    border-radius: 18px;
+    border-width: 4px;
+  }
+
+  .burner {
+    width: 85px;
+    height: 85px;
+    border-width: 3px;
+  }
+
+  .pan {
+    width: 130px;
+    height: 130px;
+    border-width: 4px;
+  }
+
+  .pan::before {
+    bottom: -40px;
+    width: 16px;
+    height: 45px;
+    border-width: 2px;
+  }
+
+  .patty-to-cook {
+    width: 90px;
+    height: 60px;
+    border-width: 3px;
+  }
+
+  .patty-on-pan {
+    width: 85px;
+    height: 55px;
+    border-width: 3px;
+  }
+
+  .tray {
+    width: 150px;
+    height: 90px;
+    border-width: 4px;
+  }
+
+  .plate {
+    width: 160px;
+    height: 90px;
+    border-width: 4px;
+  }
+
+  /* ステップ3 */
+  .workspace-3 {
+    gap: 15px;
+  }
+
+  .plate.large {
+    width: 210px;
+    height: 150px;
+    border-width: 6px;
+  }
+
+  .cooked-patty-final {
+    width: 95px;
+    height: 60px;
+    border-width: 3px;
+  }
+
+  .topping-box, .sauce-box {
+    padding: 8px 12px;
+    border-radius: 12px;
+  }
+
+  .topping-box h3, .sauce-box h3 {
+    font-size: 11px;
+    margin-bottom: 4px;
+    padding-bottom: 2px;
+  }
+
+  .draggable-topping span, .sauce-bottle span {
+    font-size: 9px;
+  }
+
+  .broccoli-icon {
+    width: 28px;
+    height: 28px;
+    border-width: 2px;
+  }
+
+  .broccoli-icon::after {
+    bottom: -6px;
+    width: 7px;
+    height: 7px;
+  }
+
+  .carrot-icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .tomato-icon {
+    width: 26px;
+    height: 26px;
+    border-width: 1px;
+  }
+
+  .bottle-body {
+    width: 24px;
+    height: 38px;
+    border-width: 1px;
+  }
+
+  .bottle-body::after {
+    top: -5px;
+    width: 6px;
+    height: 5px;
+  }
+
+  /* フッター */
+  footer {
+    height: 50px;
+    padding: 0 15px;
+  }
+
+  #footer-message {
+    font-size: 12px;
+  }
+
+  button {
+    font-size: 11px;
+    padding: 5px 12px;
+  }
+
+  /* 投入された肉などの調整 */
+  .added-meat {
+    width: 60px;
+    height: 60px;
+  }
+
+  .added-onion {
+    width: 55px;
+    height: 55px;
+  }
+
+  .added-egg {
+    width: 35px;
+    height: 35px;
+  }
+
+  .added-breadcrumbs {
+    width: 60px;
+    height: 50px;
+  }
+}
+
+/* ==========================================
+   メニュー画面
+   ========================================== */
+.menu-screen {
+  width: 100vw;
+  height: 100dvh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  background-color: var(--bg-color);
+  padding: 20px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.menu-content {
+  text-align: center;
+  max-width: 900px;
+  width: 100%;
+  margin: auto;
+  padding: 12px 0 32px;
+}
+
+.menu-title {
+  font-size: 36px;
+  color: var(--primary-color);
+  margin-bottom: 8px;
+}
+
+.menu-subtitle {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 40px;
+}
+
+.recipe-cards {
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.recipe-card {
+  width: 260px;
+  padding: 30px 20px;
+  border: none;
+  border-radius: 28px;
+  background-color: #ffffff;
+  box-shadow: 0 12px 30px var(--shadow-color);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.recipe-card:hover {
+  transform: translateY(-6px) scale(1.03);
+  box-shadow: 0 18px 40px var(--shadow-active);
+}
+
+.recipe-icon {
+  width: 120px;
+  height: 100px;
+  border-radius: 20px;
+  position: relative;
+  flex-shrink: 0;
+  background-color: #fafafa;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.hamburger-icon {
+  background: radial-gradient(ellipse at 50% 60%, var(--cooked-meat-color) 40%, transparent 42%),
+              linear-gradient(180deg, #fafafa 0%, #f0f0f0 100%);
+  border: 4px solid var(--plate-border);
+  box-shadow: inset 0 -20px 0 rgba(0,0,0,0.05);
+}
+
+.hamburger-icon::after {
+  content: '';
+  position: absolute;
+  top: 15%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 45px;
+  background-color: var(--cooked-meat-color);
+  border-radius: 50%;
+  border: 3px solid #5d4037;
+}
+
+.omurice-icon {
+  background: linear-gradient(180deg, #fafafa 0%, #f0f0f0 100%);
+  border: 4px solid var(--plate-border);
+  box-shadow: inset 0 -15px 0 rgba(0,0,0,0.05);
+}
+
+.omurice-icon::before {
+  content: '';
+  position: absolute;
+  bottom: 15%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 70px;
+  height: 35px;
+  background: linear-gradient(180deg, #fff8e1 0%, #ffcc80 100%);
+  border-radius: 50% 50% 30% 30%;
+  border: 2px solid #ffb74d;
+}
+
+.omurice-icon::after {
+  content: '';
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 45px;
+  background: linear-gradient(180deg, #fff9c4 0%, #ffd54f 100%);
+  border-radius: 50% 50% 40% 40%;
+  border: 3px solid #ffb300;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.recipe-name {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+.recipe-desc {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-dark);
+  opacity: 0.7;
+}
+
+.recipe-game {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+/* ==========================================
+   オムライス専用スタイル
+   ========================================== */
+.chicken {
+  width: 160px;
+  height: 120px;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.chicken-body {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #ffe0b2 0%, #ffcc80 50%, #ffb74d 100%);
+  border-radius: 40% 40% 30% 30%;
+  border: 4px solid #ff9800;
+  box-shadow: 0 10px 15px rgba(0,0,0,0.08);
+  position: relative;
+}
+
+.chicken-body::before {
+  content: '';
+  position: absolute;
+  top: 20%;
+  left: 15%;
+  width: 30%;
+  height: 25%;
+  background-color: rgba(255,255,255,0.3);
+  border-radius: 50%;
+}
+
+.chicken-pieces {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  display: none;
+}
+
+.chicken-piece {
+  position: absolute;
+  background-color: #ffcc80;
+  border: 2px solid #ff9800;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.om-pan-area {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.om-shelf {
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.om-pan-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.om-pan {
+  position: relative;
+  width: 280px;
+  height: 280px;
+}
+
+.om-pan.large {
+  width: 320px;
+  height: 320px;
+}
+
+.ing-rice-body {
+  width: 70px;
+  height: 70px;
+  background-color: #fff8e1;
+  border-radius: 50%;
+  border: 4px solid #ffe082;
+  box-shadow: 0 6px 10px var(--shadow-color);
+  position: relative;
+}
+
+.ing-rice-body::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50px;
+  height: 50px;
+  background: radial-gradient(circle, #fff 20%, transparent 25%);
+  background-size: 8px 8px;
+  opacity: 0.5;
+}
+
+.ing-chicken-cut-body {
+  width: 70px;
+  height: 70px;
+  background-color: #ffcc80;
+  border: 4px solid #ff9800;
+  border-radius: 20px;
+  box-shadow: 0 6px 10px var(--shadow-color);
+}
+
+.ing-ketchup-body {
+  width: 55px;
+  height: 75px;
+  background-color: #e53935;
+  border-radius: 10px 10px 5px 5px;
+  border: 4px solid #c62828;
+  box-shadow: 0 6px 10px var(--shadow-color);
+  position: relative;
+}
+
+.ing-ketchup-body::after {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 14px;
+  height: 10px;
+  background-color: #fff;
+  border: 2px solid #ccc;
+  border-radius: 4px 4px 0 0;
+}
+
+.chicken-rice-mix {
+  width: 180px;
+  height: 180px;
+  background: linear-gradient(135deg, #ff8a65 0%, #ff7043 40%, #fff8e1 60%, #ffcc80 100%);
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: background 0.3s ease, border-radius 0.2s ease;
+  touch-action: none;
+}
+
+.rice-mound {
+  width: 180px;
+  height: 100px;
+  background: linear-gradient(180deg, #fff8e1 0%, #ffcc80 100%);
+  border-radius: 50% 50% 30% 30%;
+  border: 4px solid #ffb74d;
+  transition: transform 0.15s ease, border-radius 0.3s ease;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+}
+
+.rice-mound.shaped {
+  border-radius: 45% 45% 25% 25%;
+}
+
+.om-chicken-rice-tray {
+  width: 220px;
+  padding: 16px 20px 12px;
+  background-color: rgba(255, 255, 255, 0.7);
+  border-radius: 20px;
+  border: 3px solid #eceff1;
+  box-shadow: 0 8px 20px var(--shadow-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.om-rice-to-place {
+  width: 150px;
+  height: 85px;
+  cursor: grab;
+  touch-action: none;
+}
+
+.om-rice-to-place.dragging {
+  cursor: grabbing;
+  transform: scale(1.08);
+  z-index: 100;
+}
+
+.tray-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+.om-chicken-rice-tray.used {
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.om-rice-plate {
+  width: 320px;
+  height: 200px;
+}
+
+.om-rice-plate.small {
+  width: 200px;
+  height: 130px;
+  margin-top: 15px;
+}
+
+.om-workspace-2 {
+  grid-template-columns: 1fr 1.5fr;
+}
+
+.om-egg-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+.om-egg-bowl {
+  width: 260px;
+  height: 260px;
+}
+
+.om-egg-source {
+  opacity: 1;
+}
+
+.egg-liquid {
+  width: 140px;
+  height: 100px;
+  background: radial-gradient(ellipse at 50% 40%, #fff9c4 0%, #ffd54f 100%);
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.egg-liquid.visible {
+  opacity: 1;
+}
+
+.egg-liquid.beaten {
+  background: radial-gradient(ellipse at 50% 50%, #fffde7 0%, #fff176 100%);
+  border-radius: 40% 60% 50% 50%;
+}
+
+.omelette-on-pan {
+  width: 200px;
+  height: 140px;
+  background: linear-gradient(180deg, #fff9c4 0%, #ffd54f 100%);
+  border-radius: 50% 50% 40% 40%;
+  border: 4px solid #ffb300;
+  cursor: default;
+  transition: background 0.5s linear, border-color 0.5s linear, height 0.4s ease, border-radius 0.4s ease;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.omelette-on-pan.cooked {
+  background: linear-gradient(180deg, #fff176 0%, #fbc02d 100%);
+  border-color: #f9a825;
+}
+
+.omelette-on-pan.has-rice {
+  height: 170px;
+  cursor: pointer;
+}
+
+.omelette-on-pan.wrap-1 {
+  border-radius: 48% 48% 38% 38%;
+}
+
+.omelette-on-pan.wrap-2 {
+  border-radius: 42% 42% 32% 32%;
+  height: 185px;
+}
+
+.omelette-on-pan.wrap-3 {
+  border-radius: 38% 38% 28% 28%;
+  height: 195px;
+}
+
+.omelette-on-pan.wrapped {
+  border-radius: 50% 50% 32% 32%;
+  height: 200px;
+  cursor: default;
+  animation: wrapSettle 0.5s ease;
+}
+
+@keyframes wrapSettle {
+  0% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.rice-on-omelette {
+  width: 130px;
+  height: 75px;
+  background: linear-gradient(180deg, #fff8e1 0%, #ffcc80 100%);
+  border-radius: 50% 50% 28% 28%;
+  border: 3px solid #ffb74d;
+  position: absolute;
+  bottom: 18%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  pointer-events: none;
+}
+
+.omelette-on-pan.wrapped .rice-on-omelette {
+  bottom: 22%;
+  opacity: 0.85;
+}
+
+.omelette-fold {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 55%;
+  background: linear-gradient(180deg, #fff176 0%, #fbc02d 100%);
+  border-radius: 50% 50% 0 0;
+  border: 4px solid #f9a825;
+  border-bottom: none;
+  transform-origin: bottom center;
+  transform: scaleY(0);
+  transition: transform 0.35s ease;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.omelette-on-pan.wrap-1 .omelette-fold { transform: scaleY(0.25); }
+.omelette-on-pan.wrap-2 .omelette-fold { transform: scaleY(0.5); }
+.omelette-on-pan.wrap-3 .omelette-fold { transform: scaleY(0.75); }
+.omelette-on-pan.wrapped .omelette-fold { transform: scaleY(1); }
+
+.omelette-cover {
+  width: 220px;
+  height: 130px;
+  background: linear-gradient(180deg, #fff176 0%, #fbc02d 100%);
+  border-radius: 50% 50% 35% 35%;
+  border: 4px solid #f9a825;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+.omelette-cover.wrapped-final {
+  top: 50%;
+}
+
+#om-ketchup-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+  pointer-events: auto;
+  border-radius: 50%;
+}
+
+.parsley-icon {
+  width: 52px;
+  height: 52px;
+  background-color: #fafafa;
+  border-radius: 14px;
+  border: 3px solid #e0e0e0;
+  box-shadow: 0 4px 8px var(--shadow-color);
+  position: relative;
+  overflow: hidden;
+}
+
+.parsley-icon::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 38px;
+  height: 30px;
+  border-radius: 50% 50% 40% 40%;
+  background-color: rgba(129, 199, 132, 0.35);
+  background-image:
+    radial-gradient(circle at 25% 35%, #388e3c 2px, transparent 2.5px),
+    radial-gradient(circle at 45% 25%, #66bb6a 1.5px, transparent 2px),
+    radial-gradient(circle at 65% 40%, #4caf50 2px, transparent 2.5px),
+    radial-gradient(circle at 35% 60%, #81c784 1.5px, transparent 2px),
+    radial-gradient(circle at 55% 55%, #388e3c 1px, transparent 1.5px),
+    radial-gradient(circle at 75% 65%, #66bb6a 1.5px, transparent 2px),
+    radial-gradient(circle at 20% 50%, #4caf50 1px, transparent 1.5px);
+}
+
+.parsley-icon::after {
+  content: '';
+  position: absolute;
+  bottom: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 28px;
+  height: 4px;
+  background: linear-gradient(90deg, transparent, rgba(76, 175, 80, 0.5), transparent);
+  border-radius: 50%;
+}
+
+.placed-topping .parsley-icon {
+  width: 48px;
+  height: 28px;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+.placed-topping .parsley-icon::before {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: transparent;
+  background-image:
+    radial-gradient(circle at 20% 40%, #388e3c 2px, transparent 2.5px),
+    radial-gradient(circle at 40% 30%, #66bb6a 1.5px, transparent 2px),
+    radial-gradient(circle at 60% 50%, #4caf50 2px, transparent 2.5px),
+    radial-gradient(circle at 75% 35%, #81c784 1.5px, transparent 2px),
+    radial-gradient(circle at 30% 65%, #388e3c 1px, transparent 1.5px),
+    radial-gradient(circle at 55% 70%, #66bb6a 1.5px, transparent 2px),
+    radial-gradient(circle at 85% 60%, #4caf50 1px, transparent 1.5px);
+}
+
+.placed-topping .parsley-icon::after {
+  display: none;
+}
+
+.added-rice {
+  width: 120px;
+  height: 80px;
+  background-color: #fff8e1;
+  border-radius: 50%;
+  border: 3px solid #ffe082;
+}
+
+.added-chicken {
+  width: 80px;
+  height: 60px;
+  background-color: #ffcc80;
+  border-radius: 15px;
+  border: 3px solid #ff9800;
+}
+
+.added-ketchup {
+  width: 60px;
+  height: 50px;
+  background-color: #e53935;
+  border-radius: 50%;
+  border: 3px solid #c62828;
+  opacity: 0.8;
+}
+
+@media (max-width: 640px) {
+  .menu-title { font-size: 28px; }
+  .menu-subtitle { font-size: 18px; margin-bottom: 24px; }
+  .recipe-cards {
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+  .recipe-card {
+    width: min(300px, 92vw);
+    padding: 20px 16px;
+  }
+}
+
+@media (max-height: 600px) {
+  .menu-title { font-size: 24px; }
+  .menu-subtitle { font-size: 16px; margin-bottom: 20px; }
+  .recipe-card { width: 180px; padding: 15px; }
+  .recipe-icon { width: 80px; height: 65px; }
+  .recipe-name { font-size: 18px; }
+  .recipe-desc { font-size: 11px; }
+  .back-btn { font-size: 11px; padding: 5px 10px; }
+  .chicken { width: 100px; height: 75px; }
+  .om-pan { width: 190px; height: 190px; }
+  .om-pan.large { width: 220px; height: 220px; }
+  .rice-mound { width: 130px; height: 75px; }
+  .om-rice-to-place { width: 110px; height: 65px; }
+  .om-chicken-rice-tray { width: 170px; padding: 10px 14px 8px; }
+  .om-egg-bowl { width: 180px; height: 180px; }
+  .omelette-cover { width: 150px; height: 90px; }
+}
+
+@media (max-height: 450px) {
+  .menu-title { font-size: 18px; }
+  .recipe-card { width: 140px; padding: 10px; gap: 6px; }
+  .recipe-icon { width: 60px; height: 50px; }
+  .recipe-name { font-size: 14px; }
+}
+
+
+
+/* ==========================================
+   ピザ専用スタイル
+   ========================================== */
+.pizza-icon {
+  background: radial-gradient(circle at 50% 50%, #e53935 0%, #c62828 35%, transparent 36%),
+              radial-gradient(circle at 30% 35%, #ffca28 0 6px, transparent 7px),
+              radial-gradient(circle at 65% 40%, #ffca28 0 5px, transparent 6px),
+              radial-gradient(circle at 45% 65%, #ffca28 0 5px, transparent 6px),
+              radial-gradient(circle at 70% 60%, #ffca28 0 4px, transparent 5px),
+              linear-gradient(180deg, #f5deb3 0%, #e8c88a 100%);
+  border: 4px solid #d4a574;
+  border-radius: 50%;
+  box-shadow: inset 0 -8px 0 rgba(0,0,0,0.08);
+}
+
+.pz-workspace-1 {
+  grid-template-columns: 1fr;
+  justify-items: center;
+}
+
+.pz-shelf {
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+}
+
+.ing-flour-body {
+  width: 65px;
+  height: 75px;
+  background: linear-gradient(180deg, #fafafa 0%, #eeeeee 100%);
+  border-radius: 8px 8px 12px 12px;
+  border: 4px solid #e0e0e0;
+  box-shadow: 0 6px 10px var(--shadow-color);
+  position: relative;
+}
+
+.ing-flour-body::after {
+  content: '';
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 45px;
+  height: 20px;
+  background-color: #fff8e1;
+  border-radius: 4px;
+  border: 2px solid #ffe082;
+}
+
+.ing-water-body {
+  width: 55px;
+  height: 70px;
+  background: linear-gradient(180deg, #e3f2fd 0%, #bbdefb 60%, #90caf9 100%);
+  border-radius: 8px 8px 16px 16px;
+  border: 4px solid #64b5f6;
+  box-shadow: 0 6px 10px var(--shadow-color);
+  position: relative;
+}
+
+.ing-water-body::after {
+  content: '';
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 30px;
+  height: 35px;
+  background: rgba(255,255,255,0.5);
+  border-radius: 50% 50% 40% 40%;
+}
+
+.ing-yeast-body {
+  width: 55px;
+  height: 65px;
+  background: linear-gradient(180deg, #fff3e0 0%, #ffe0b2 100%);
+  border-radius: 6px;
+  border: 4px solid #ffb74d;
+  box-shadow: 0 6px 10px var(--shadow-color);
+  position: relative;
+}
+
+.ing-yeast-body::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 35px;
+  height: 25px;
+  background-color: #ffcc80;
+  border-radius: 4px;
+  border: 2px dashed #ff9800;
+}
+
+.ing-sauce-body {
+  width: 50px;
+  height: 70px;
+  background: linear-gradient(180deg, #e53935 0%, #c62828 100%);
+  border-radius: 8px 8px 4px 4px;
+  border: 3px solid #b71c1c;
+  box-shadow: 0 6px 10px var(--shadow-color);
+  position: relative;
+}
+
+.ing-sauce-body::after {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 12px;
+  background-color: #b71c1c;
+  border-radius: 4px 4px 0 0;
+}
+
+.ing-cheese-body {
+  width: 65px;
+  height: 55px;
+  background: linear-gradient(180deg, #fff9c4 0%, #ffee58 50%, #fdd835 100%);
+  border-radius: 8px;
+  border: 4px solid #fbc02d;
+  box-shadow: 0 6px 10px var(--shadow-color);
+  position: relative;
+}
+
+.ing-cheese-body::after {
+  content: '';
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  width: 12px;
+  height: 12px;
+  background-color: #f9a825;
+  border-radius: 50%;
+  box-shadow: 18px 5px 0 #f9a825, 35px 10px 0 #f9a825, 10px 22px 0 #f9a825;
+}
+
+.pizza-dough {
+  width: 70%;
+  height: 70%;
+  background-color: #f5deb3;
+  border: 4px solid #e8c88a;
+  border-radius: 50%;
+  position: absolute;
+  top: 15%;
+  left: 15%;
+  transition: border-radius 0.1s ease, background-color 0.2s ease;
+}
+
+.pz-stretch-board {
+  width: 340px;
+  height: 340px;
+  background: linear-gradient(145deg, #f5e8c7 0%, #e8d5a3 100%);
+  border-radius: 50%;
+  box-shadow: 0 12px 0 #e4bd93, 0 16px 25px var(--shadow-color);
+  border: 4px solid #fffdfa;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.raw-pizza-dough {
+  width: 120px;
+  height: 120px;
+  background-color: #f5deb3;
+  border: 5px solid #e8c88a;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.1s ease, width 0.3s ease, height 0.3s ease;
+  box-shadow: inset 0 0 20px rgba(255,255,255,0.3);
+}
+
+.pz-workspace-2,
+.pz-workspace-bake {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 30px;
+  height: 100%;
+}
+
+.pz-workspace-bake {
+  grid-template-columns: 1fr;
+  place-items: center;
+}
+
+.pz-workspace-topping .pz-baking-tray {
+  cursor: default;
+}
+
+.pz-sauce-cheese-row {
+  justify-content: center;
+}
+
+.pz-bake-prep {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  width: 100%;
+  max-width: 720px;
+  align-items: center;
+}
+
+.pz-tray-slot {
+  display: flex;
+  justify-content: center;
+}
+
+.pz-tray-to-oven {
+  cursor: grab;
+}
+
+.pz-tray-to-oven.dragging {
+  cursor: grabbing;
+  z-index: 50;
+}
+
+.pz-finish-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.pz-prep-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.pz-sauce-cheese-shelf {
+  display: flex;
+  gap: 20px;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 20px;
+  padding: 12px 20px;
+}
+
+.pz-baking-tray {
+  width: 280px;
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.6);
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 8px 20px var(--shadow-color);
+  cursor: grab;
+  transition: transform 0.2s ease;
+}
+
+.pz-baking-tray.dragging {
+  cursor: grabbing;
+  z-index: 50;
+}
+
+.pz-baking-tray.in-oven {
+  cursor: default;
+}
+
+.pz-tray-inside {
+  width: 220px;
+  height: 220px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.pizza-dough-base {
+  width: 200px;
+  height: 200px;
+  background-color: #f5deb3;
+  border: 5px solid #e8c88a;
+  border-radius: 50%;
+  position: relative;
+  transition: background 0.5s ease, box-shadow 0.5s ease;
+  box-shadow: inset 0 0 15px rgba(255,255,255,0.2);
+}
+
+.pizza-dough-base.has-sauce {
+  background: radial-gradient(circle at 50% 50%, #e53935 0%, #c62828 78%);
+}
+
+.pizza-dough-base.has-cheese:not(.has-sauce) {
+  background:
+    radial-gradient(circle at 25% 30%, #ffca28 0 8px, transparent 9px),
+    radial-gradient(circle at 60% 25%, #ffca28 0 7px, transparent 8px),
+    radial-gradient(circle at 40% 60%, #ffca28 0 8px, transparent 9px),
+    radial-gradient(circle at 70% 55%, #ffca28 0 6px, transparent 7px),
+    radial-gradient(circle at 30% 70%, #ffca28 0 7px, transparent 8px),
+    radial-gradient(circle at 55% 45%, #ffca28 0 6px, transparent 7px),
+    #f5deb3;
+}
+
+.pizza-dough-base.has-sauce.has-cheese {
+  background:
+    radial-gradient(circle at 25% 30%, #ffca28 0 8px, transparent 9px),
+    radial-gradient(circle at 60% 25%, #ffca28 0 7px, transparent 8px),
+    radial-gradient(circle at 40% 60%, #ffca28 0 8px, transparent 9px),
+    radial-gradient(circle at 70% 55%, #ffca28 0 6px, transparent 7px),
+    radial-gradient(circle at 30% 70%, #ffca28 0 7px, transparent 8px),
+    radial-gradient(circle at 55% 45%, #ffca28 0 6px, transparent 7px),
+    radial-gradient(circle at 50% 50%, #e53935 0%, #c62828 78%);
+}
+
+.pizza-dough-base.baked {
+  border-color: #c49a6c;
+  box-shadow: inset 0 0 20px rgba(255,200,100,0.3), 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.pizza-dough-base.baked.has-sauce:not(.has-cheese) {
+  background: radial-gradient(circle at 50% 50%, #d32f2f 0%, #b71c1c 78%);
+}
+
+.pizza-dough-base.baked.has-cheese:not(.has-sauce) {
+  background:
+    radial-gradient(circle at 25% 30%, #ffb300 0 8px, transparent 9px),
+    radial-gradient(circle at 60% 25%, #ffb300 0 7px, transparent 8px),
+    radial-gradient(circle at 40% 60%, #ffb300 0 8px, transparent 9px),
+    radial-gradient(circle at 70% 55%, #ffb300 0 6px, transparent 7px),
+    radial-gradient(circle at 30% 70%, #ffb300 0 7px, transparent 8px),
+    radial-gradient(circle at 55% 45%, #ffb300 0 6px, transparent 7px),
+    #d4a574;
+}
+
+.pizza-dough-base.baked.has-sauce.has-cheese {
+  background:
+    radial-gradient(circle at 25% 30%, #ffb300 0 8px, transparent 9px),
+    radial-gradient(circle at 60% 25%, #ffb300 0 7px, transparent 8px),
+    radial-gradient(circle at 40% 60%, #ffb300 0 8px, transparent 9px),
+    radial-gradient(circle at 70% 55%, #ffb300 0 6px, transparent 7px),
+    radial-gradient(circle at 30% 70%, #ffb300 0 7px, transparent 8px),
+    radial-gradient(circle at 55% 45%, #ffb300 0 6px, transparent 7px),
+    radial-gradient(circle at 50% 50%, #d32f2f 0%, #b71c1c 65%, #d4a574 66%);
+}
+
+.pz-oven-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.pizza-oven {
+  width: 260px;
+  height: 280px;
+  position: relative;
+}
+
+.oven-body {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, #546e7a 0%, #37474f 100%);
+  border-radius: 20px 20px 12px 12px;
+  border: 5px solid #263238;
+  box-shadow: 0 12px 25px var(--shadow-color);
+  position: relative;
+  overflow: hidden;
+}
+
+.oven-window {
+  width: 200px;
+  height: 160px;
+  margin: 30px auto 0;
+  background-color: #1a1a1a;
+  border-radius: 12px;
+  border: 4px solid #455a64;
+  position: relative;
+  overflow: hidden;
+}
+
+.oven-inside {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.oven-fire {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 40%;
+  background: linear-gradient(180deg, transparent 0%, rgba(255, 87, 34, 0.3) 40%, rgba(255, 152, 0, 0.6) 100%);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.oven-fire.active {
+  opacity: 1;
+  animation: ovenGlow 1.5s infinite alternate;
+}
+
+@keyframes ovenGlow {
+  from { filter: brightness(1); }
+  to { filter: brightness(1.3); }
+}
+
+.oven-door {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  background: linear-gradient(180deg, #607d8b 0%, #455a64 100%);
+  border-top: 4px solid #78909c;
+  border-radius: 0 0 8px 8px;
+}
+
+.oven-door::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 30px;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  background-color: #cfd8dc;
+  border-radius: 50%;
+  border: 2px solid #90a4ae;
+}
+
+.pizza-in-oven {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  position: relative;
+  transition: transform 0.3s ease;
+}
+
+.pizza-final-base {
+  width: 260px;
+  height: 260px;
+  background:
+    radial-gradient(circle at 25% 30%, #ffb300 0 10px, transparent 11px),
+    radial-gradient(circle at 60% 25%, #ffb300 0 9px, transparent 10px),
+    radial-gradient(circle at 40% 60%, #ffb300 0 10px, transparent 11px),
+    radial-gradient(circle at 70% 55%, #ffb300 0 8px, transparent 9px),
+    radial-gradient(circle at 30% 70%, #ffb300 0 9px, transparent 10px),
+    radial-gradient(circle at 55% 45%, #ffb300 0 8px, transparent 9px),
+    radial-gradient(circle at 50% 50%, #d32f2f 0%, #b71c1c 65%, #d4a574 66%);
+  border: 6px solid #c49a6c;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: inset 0 0 20px rgba(255,200,100,0.3);
+}
+
+.pepperoni-icon {
+  width: 50px;
+  height: 50px;
+  background: radial-gradient(circle at 35% 35%, #ef5350 0%, #c62828 60%, #b71c1c 100%);
+  border-radius: 50%;
+  border: 3px solid #b71c1c;
+  box-shadow: 0 4px 8px var(--shadow-color);
+}
+
+.mushroom-icon {
+  width: 50px;
+  height: 50px;
+  position: relative;
+}
+
+.mushroom-icon::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 48px;
+  height: 30px;
+  background: linear-gradient(180deg, #d7ccc8 0%, #a1887f 100%);
+  border-radius: 50% 50% 20% 20%;
+  border: 3px solid #8d6e63;
+}
+
+.mushroom-icon::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 22px;
+  height: 22px;
+  background-color: #efebe9;
+  border-radius: 4px;
+  border: 2px solid #bcaaa4;
+}
+
+.bellpepper-icon {
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(145deg, #66bb6a 0%, #43a047 50%, #2e7d32 100%);
+  clip-path: polygon(50% 5%, 85% 35%, 80% 90%, 50% 100%, 20% 90%, 15% 35%);
+  box-shadow: 0 4px 8px var(--shadow-color);
+  position: relative;
+}
+
+.bellpepper-icon::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 10px;
+  height: 8px;
+  background-color: #2e7d32;
+  border-radius: 50%;
+}
+
+.added-flour {
+  width: 50px;
+  height: 40px;
+  background-color: #fff8e1;
+  border-radius: 50%;
+  border: 3px solid #ffe082;
+}
+
+.added-water {
+  width: 45px;
+  height: 45px;
+  background-color: rgba(144, 202, 249, 0.6);
+  border-radius: 50%;
+  border: 3px solid #64b5f6;
+}
+
+.added-yeast {
+  width: 40px;
+  height: 30px;
+  background-color: #ffcc80;
+  border-radius: 6px;
+  border: 2px dashed #ff9800;
+}
+
+.placed-topping .pepperoni-icon,
+.placed-topping .mushroom-icon,
+.placed-topping .bellpepper-icon {
+  width: 36px;
+  height: 36px;
+}
+
+.placed-topping .mushroom-icon::before {
+  width: 34px;
+  height: 22px;
+}
+
+.placed-topping .mushroom-icon::after {
+  width: 16px;
+  height: 16px;
+}
+
+@media (max-height: 600px) {
+  .pz-stretch-board { width: 240px; height: 240px; }
+  .raw-pizza-dough { width: 90px; height: 90px; }
+  .pz-baking-tray { width: 200px; padding: 12px; }
+  .pz-tray-inside { width: 160px; height: 160px; }
+  .pizza-dough-base { width: 150px; height: 150px; }
+  .pizza-oven { width: 200px; height: 220px; }
+  .oven-window { width: 150px; height: 120px; margin-top: 20px; }
+  .pizza-final-base { width: 180px; height: 180px; }
+  .pizza-in-oven { width: 100px; height: 100px; }
+}
+
+/* Parsley shake-to-drop falling flakes */
+.parsley-flake {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background-color: #66bb6a;
+  border-radius: 50% 40% 50% 40%;
+  pointer-events: none;
+  z-index: 10;
+  opacity: 0.9;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}

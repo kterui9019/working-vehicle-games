@@ -4,106 +4,152 @@
     <meta charset="UTF-8" />
     <meta
       name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
     />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="mobile-web-app-capable" content="yes" />
-    <title>きっずゲーム - ショベルカー＆トラクター＆ブルドーザー</title>
-    <link rel="stylesheet" href="/src/style.css" />
+    <meta name="theme-color" content="#4a90d9" />
+    <title>きっずゲーム</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        color-scheme: light;
+        --bg1: #fff6e8;
+        --bg2: #e8f4ff;
+        --ink: #2c3e50;
+        --muted: #5a6a7a;
+        --card-shadow: 0 12px 32px rgba(44, 62, 80, 0.12);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100dvh;
+        font-family: "Zen Maru Gothic", "Hiragino Maru Gothic ProN", sans-serif;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at 15% 20%, #ffe8b8 0%, transparent 40%),
+          radial-gradient(circle at 85% 10%, #c8e6ff 0%, transparent 35%),
+          radial-gradient(circle at 50% 100%, #d4f5d4 0%, transparent 40%),
+          linear-gradient(160deg, var(--bg1), var(--bg2));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px 16px;
+      }
+
+      .portal {
+        width: min(920px, 100%);
+        text-align: center;
+      }
+
+      h1 {
+        margin: 0 0 8px;
+        font-size: clamp(2rem, 6vw, 3rem);
+        letter-spacing: 0.04em;
+      }
+
+      .subtitle {
+        margin: 0 0 32px;
+        color: var(--muted);
+        font-size: clamp(1rem, 2.8vw, 1.25rem);
+      }
+
+      .games {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 20px;
+      }
+
+      .game-card {
+        display: block;
+        text-decoration: none;
+        color: inherit;
+        background: rgba(255, 255, 255, 0.92);
+        border-radius: 28px;
+        padding: 28px 22px 24px;
+        box-shadow: var(--card-shadow);
+        border: 3px solid transparent;
+        transition:
+          transform 0.15s ease,
+          border-color 0.15s ease,
+          box-shadow 0.15s ease;
+      }
+
+      .game-card:hover,
+      .game-card:focus-visible {
+        transform: translateY(-4px) scale(1.02);
+        border-color: #4a90d9;
+        box-shadow: 0 18px 40px rgba(44, 62, 80, 0.16);
+        outline: none;
+      }
+
+      .game-card.cook:hover,
+      .game-card.cook:focus-visible {
+        border-color: #e67e22;
+      }
+
+      .icon {
+        font-size: 3.5rem;
+        line-height: 1;
+        margin-bottom: 12px;
+      }
+
+      .game-card h2 {
+        margin: 0 0 8px;
+        font-size: 1.45rem;
+      }
+
+      .game-card p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.98rem;
+        line-height: 1.5;
+      }
+
+      .badge {
+        display: inline-block;
+        margin-top: 16px;
+        padding: 6px 14px;
+        border-radius: 999px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        background: #e8f4ff;
+        color: #2b6cb0;
+      }
+
+      .game-card.cook .badge {
+        background: #fff0e0;
+        color: #c05621;
+      }
+    </style>
   </head>
   <body>
-    <div id="app">
-      <canvas id="game-canvas"></canvas>
+    <main class="portal">
+      <h1>🎮 きっずゲーム</h1>
+      <p class="subtitle">あそびたいゲームをえらんでね！</p>
 
-      <div id="hud">
-        <div id="score-panel">
-          <span class="score-icon">🪣</span>
-          <span id="score">0</span>
-          <span class="score-total">/ <span id="total">28</span></span>
-        </div>
-        <div id="message"></div>
+      <div class="games">
+        <a class="game-card vehicles" href="./vehicles/">
+          <div class="icon">🚜</div>
+          <h2>さぎょうしゃ</h2>
+          <p>ショベルカー・トラクター・ブルドーザーであそぼう！</p>
+          <span class="badge">はじめる</span>
+        </a>
+
+        <a class="game-card cook" href="./cook/">
+          <div class="icon">👨‍🍳</div>
+          <h2>おうちでコックさん</h2>
+          <p>ハンバーグ・オムライス・ピザをつくろう！</p>
+          <span class="badge">はじめる</span>
+        </a>
       </div>
-
-      <div id="joystick-left" class="joystick-zone" data-side="left">
-        <div class="joystick-base">
-          <div class="joystick-knob"></div>
-        </div>
-        <span class="joystick-label">アーム上下・旋回</span>
-      </div>
-
-      <div id="joystick-right" class="joystick-zone" data-side="right">
-        <div class="joystick-base">
-          <div class="joystick-knob"></div>
-        </div>
-        <span class="joystick-label">ブーム・バケット</span>
-      </div>
-
-      <div id="start-screen">
-        <h1>🚜 きっずゲーム</h1>
-        <p>あそびたいのをえらんでね！</p>
-
-        <div class="mode-cards">
-          <div class="mode-card">
-            <div class="mode-icon">🚧</div>
-            <h2>ショベルカー</h2>
-            <p>ボールをバケットに入れよう！</p>
-            <div class="tutorial" id="excavator-tutorial">
-              <div class="tutorial-item">
-                <span class="hand left">👈</span>
-                <span>左：アームの上下・くるくる旋回</span>
-              </div>
-              <div class="tutorial-item">
-                <span class="hand right">👉</span>
-                <span>右：ブームの上下・バケットですくう</span>
-              </div>
-            </div>
-            <button data-mode="excavator">はじめる！</button>
-          </div>
-
-          <div class="mode-card">
-            <div class="mode-icon">🌾</div>
-            <h2>トラクター</h2>
-            <p>走ったところに苗を植えよう！</p>
-            <div class="tutorial" id="tractor-start-tutorial">
-              <div class="tutorial-item">
-                <span class="hand left">👈👉</span>
-                <span>左右：ハンドルで方向転換</span>
-              </div>
-              <div class="tutorial-item">
-                <span class="hand right">👆👇</span>
-                <span>上下：前に進む・後ろに下がる</span>
-              </div>
-            </div>
-            <button data-mode="tractor">はじめる！</button>
-          </div>
-
-          <div class="mode-card">
-            <div class="mode-icon">🪨</div>
-            <h2>ブルドーザー</h2>
-            <p>大きな岩を押してゴールに運ぼう！</p>
-            <div class="tutorial" id="bulldozer-start-tutorial">
-              <div class="tutorial-item">
-                <span class="hand left">👈</span>
-                <span>左手：カメラをまわす・上下</span>
-              </div>
-              <div class="tutorial-item">
-                <span class="hand right">👉</span>
-                <span>右手：ハンドル・前後</span>
-              </div>
-            </div>
-            <button data-mode="bulldozer">はじめる！</button>
-          </div>
-        </div>
-      </div>
-
-      <div id="clear-screen" class="hidden">
-        <h1>🎉 やったね！</h1>
-        <p id="clear-message">ぜんぶ集められたよ！</p>
-        <button id="restart-btn">もういちど！</button>
-      </div>
-
-      <button id="tractor-restart-btn" class="tractor-reset-btn hidden">🌱 リセット</button>
-    </div>
-    <script type="module" src="/src/main.js"></script>
+    </main>
   </body>
 </html>

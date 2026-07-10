@@ -1,32 +1,37 @@
-# working-vehicle-games
+# kids-games（working-vehicle-games）
 
-子ども向けの作業車ゲーム（ショベルカー・トラクター）。Vite + Three.js で動くブラウザゲームです。
+子ども向けブラウザゲーム集。GitHub Pages で公開しています。
 
 ## 公開サイト
 
-GitHub Pages でホスティングしています。
-
 **https://kterui9019.github.io/working-vehicle-games/**
+
+| パス | ゲーム |
+|------|--------|
+| `/` | ポータル（ゲーム選択） |
+| `/vehicles/` | さぎょうしゃ（ショベル・トラクター・ブルドーザー） |
+| `/cook/` | おうちでコックさん（ハンバーグ・オムライス・ピザ） |
 
 ## 開発
 
 ```bash
 npm install
-npm run dev
+npm run dev          # 作業車ゲーム（Vite）
+# クッキングは静的 HTML なので cook/ をブラウザで開くか、任意の静的サーバで
+npx serve cook
 ```
-
-`http://localhost:5173` でローカルプレビューできます。
 
 ## デプロイ
 
 `main` ブランチへの push で GitHub Actions が自動ビルド・デプロイします。
 
 - ワークフロー: `.github/workflows/deploy.yml`
-- ビルド出力: `dist/`
+- ビルド: `npm run build` → `dist/`（portal + cook + vehicles）
 - リポジトリ: https://github.com/kterui9019/working-vehicle-games
-
-手動で再デプロイする場合は、GitHub の Actions タブから「Deploy to GitHub Pages」を `workflow_dispatch` で実行できます。
 
 ### 注意
 
-GitHub Pages はサブパス（`/working-vehicle-games/`）で配信されるため、`vite.config.js` の `base` を変更しないでください。ローカル開発は `npm run dev` を使えば `base` の影響を受けません。
+GitHub Pages はサブパス（`/working-vehicle-games/`）で配信されます。
+
+- 作業車: `vehicles/vite.config.js` の `base: "/working-vehicle-games/vehicles/"` を変更しない
+- クッキング: 相対パス参照のため `cook/` 配下で完結させる

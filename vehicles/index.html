@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <title>きっずゲーム - ショベルカー＆トラクター＆ブルドーザー</title>
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <div id="app">
+      <canvas id="game-canvas"></canvas>
+
+      <div id="hud">
+        <div id="score-panel">
+          <span class="score-icon">🪣</span>
+          <span id="score">0</span>
+          <span class="score-total">/ <span id="total">28</span></span>
+        </div>
+        <div id="message"></div>
+      </div>
+
+      <div id="joystick-left" class="joystick-zone" data-side="left">
+        <div class="joystick-base">
+          <div class="joystick-knob"></div>
+        </div>
+        <span class="joystick-label">アーム上下・旋回</span>
+      </div>
+
+      <div id="joystick-right" class="joystick-zone" data-side="right">
+        <div class="joystick-base">
+          <div class="joystick-knob"></div>
+        </div>
+        <span class="joystick-label">ブーム・バケット</span>
+      </div>
+
+      <div id="start-screen">
+        <h1>🚜 きっずゲーム</h1>
+        <p>あそびたいのをえらんでね！</p>
+
+        <div class="mode-cards">
+          <div class="mode-card">
+            <div class="mode-icon">🚧</div>
+            <h2>ショベルカー</h2>
+            <p>ボールをバケットに入れよう！</p>
+            <div class="tutorial" id="excavator-tutorial">
+              <div class="tutorial-item">
+                <span class="hand left">👈</span>
+                <span>左：アームの上下・くるくる旋回</span>
+              </div>
+              <div class="tutorial-item">
+                <span class="hand right">👉</span>
+                <span>右：ブームの上下・バケットですくう</span>
+              </div>
+            </div>
+            <button data-mode="excavator">はじめる！</button>
+          </div>
+
+          <div class="mode-card">
+            <div class="mode-icon">🌾</div>
+            <h2>トラクター</h2>
+            <p>走ったところに苗を植えよう！</p>
+            <div class="tutorial" id="tractor-start-tutorial">
+              <div class="tutorial-item">
+                <span class="hand left">👈👉</span>
+                <span>左右：ハンドルで方向転換</span>
+              </div>
+              <div class="tutorial-item">
+                <span class="hand right">👆👇</span>
+                <span>上下：前に進む・後ろに下がる</span>
+              </div>
+            </div>
+            <button data-mode="tractor">はじめる！</button>
+          </div>
+
+          <div class="mode-card">
+            <div class="mode-icon">🪨</div>
+            <h2>ブルドーザー</h2>
+            <p>大きな岩を押してゴールに運ぼう！</p>
+            <div class="tutorial" id="bulldozer-start-tutorial">
+              <div class="tutorial-item">
+                <span class="hand left">👈</span>
+                <span>左手：カメラをまわす・上下</span>
+              </div>
+              <div class="tutorial-item">
+                <span class="hand right">👉</span>
+                <span>右手：ハンドル・前後</span>
+              </div>
+            </div>
+            <button data-mode="bulldozer">はじめる！</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="clear-screen" class="hidden">
+        <h1>🎉 やったね！</h1>
+        <p id="clear-message">ぜんぶ集められたよ！</p>
+        <button id="restart-btn">もういちど！</button>
+      </div>
+
+      <button id="tractor-restart-btn" class="tractor-reset-btn hidden">🌱 リセット</button>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
