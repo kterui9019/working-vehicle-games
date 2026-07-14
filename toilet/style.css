@@ -1,0 +1,1215 @@
+/* ==========================================
+   トイレいけるかな？ — デザイン
+   ========================================== */
+:root {
+  --bg: #e8f6ff;
+  --bg2: #f0fbff;
+  --primary: #3d9fd8;
+  --primary-dark: #2b7fb3;
+  --accent: #ffb74d;
+  --accent-pink: #ff8a9a;
+  --success: #66bb6a;
+  --ink: #2c4a5e;
+  --muted: #5a7a8c;
+  --card: #ffffff;
+  --buddy: #fff3e0;
+  --buddy-ear: #ffcc80;
+  --buddy-pants: #5c6bc0;
+  --toilet: #f5f7fa;
+  --toilet-shadow: #cfd8e3;
+  --pee: #ffe082;
+  --soap: #80deea;
+  --shadow: rgba(44, 74, 94, 0.12);
+  --font: "Zen Maru Gothic", "Hiragino Maru Gothic ProN", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+body {
+  font-family: var(--font);
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 20% 20%, #c8ecff 0%, transparent 40%),
+    radial-gradient(circle at 80% 80%, #d4f5e8 0%, transparent 40%),
+    linear-gradient(160deg, var(--bg), var(--bg2));
+  min-height: 100dvh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+button {
+  font-family: inherit;
+  border: none;
+  cursor: pointer;
+}
+
+/* ---------- メニュー ---------- */
+.menu-screen {
+  width: min(920px, 100%);
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+}
+
+.menu-content {
+  text-align: center;
+  width: 100%;
+}
+
+.menu-title {
+  font-size: clamp(2rem, 6vw, 2.8rem);
+  letter-spacing: 0.04em;
+  margin-bottom: 8px;
+}
+
+.menu-subtitle {
+  color: var(--muted);
+  font-size: clamp(1rem, 2.8vw, 1.2rem);
+  margin-bottom: 28px;
+}
+
+.mode-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+.mode-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 28px;
+  padding: 28px 22px 24px;
+  box-shadow: 0 12px 32px var(--shadow);
+  border: 3px solid transparent;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+  color: inherit;
+  text-align: center;
+}
+
+.mode-card:hover,
+.mode-card:focus-visible {
+  transform: translateY(-4px) scale(1.02);
+  border-color: var(--primary);
+  outline: none;
+}
+
+.mode-icon {
+  width: 88px;
+  height: 88px;
+  margin: 0 auto 14px;
+  border-radius: 50%;
+  position: relative;
+}
+
+.pee-icon {
+  background: linear-gradient(145deg, #b3e5fc, #4fc3f7);
+  box-shadow: inset 0 -6px 0 rgba(0, 0, 0, 0.06);
+}
+
+.pee-icon::before {
+  content: "";
+  position: absolute;
+  inset: 22px 30px 28px;
+  background: #fff9c4;
+  border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+  box-shadow: 0 4px 0 #ffe082;
+}
+
+.mode-name {
+  display: block;
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.mode-desc {
+  display: block;
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+/* ---------- ゲーム容器 ---------- */
+#game-container {
+  width: 100vw;
+  height: calc(100vw * 3 / 4);
+  max-width: 1024px;
+  max-height: 768px;
+  background: var(--card);
+  border-radius: 32px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+  border: 8px solid #fff;
+  touch-action: none;
+}
+
+@media (min-aspect-ratio: 4/3) {
+  #game-container {
+    height: 100dvh;
+    width: calc(100dvh * 4 / 3);
+  }
+}
+
+@media (max-aspect-ratio: 4/3) {
+  #game-container {
+    width: 100vw;
+    height: 100dvh;
+    max-width: none;
+    max-height: none;
+    border-radius: 0;
+    border-width: 0;
+  }
+}
+
+header {
+  height: 80px;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: linear-gradient(180deg, #f0faff, #e3f4ff);
+  border-bottom: 2px solid #d6edf8;
+  flex-shrink: 0;
+}
+
+.back-btn {
+  background: #fff;
+  color: var(--primary-dark);
+  font-weight: 700;
+  font-size: 0.95rem;
+  padding: 10px 14px;
+  border-radius: 999px;
+  box-shadow: 0 2px 8px var(--shadow);
+  flex-shrink: 0;
+}
+
+header h1 {
+  font-size: 1.1rem;
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.steps-nav {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.step-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 8px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.6);
+  opacity: 0.55;
+  transition: opacity 0.2s, background 0.2s;
+}
+
+.step-indicator.active {
+  opacity: 1;
+  background: #fff;
+  box-shadow: 0 2px 8px var(--shadow);
+}
+
+.step-indicator.done {
+  opacity: 0.85;
+}
+
+.step-indicator.done .step-num {
+  background: var(--success);
+}
+
+.step-num {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+}
+
+.step-text {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+#play-area {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+  background:
+    linear-gradient(180deg, #f7fcff 0%, #eef8ff 100%);
+}
+
+.step-section {
+  display: none;
+  height: 100%;
+  padding: 16px;
+}
+
+.step-section.active {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.scene {
+  width: 100%;
+  max-width: 640px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.guide-bubble {
+  background: #fff;
+  color: var(--ink);
+  font-weight: 700;
+  font-size: clamp(0.95rem, 2.5vw, 1.15rem);
+  padding: 12px 18px;
+  border-radius: 999px;
+  box-shadow: 0 4px 14px var(--shadow);
+  text-align: center;
+  line-height: 1.4;
+}
+
+/* ---------- うさぎキャラ ---------- */
+.buddy {
+  position: relative;
+  width: 140px;
+  height: 160px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.buddy-small {
+  width: 100px;
+  height: 115px;
+  cursor: grab;
+  touch-action: none;
+  z-index: 5;
+}
+
+.buddy-small.dragging {
+  cursor: grabbing;
+  z-index: 20;
+  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.15));
+}
+
+.buddy-ears {
+  display: flex;
+  gap: 28px;
+  margin-bottom: -8px;
+  z-index: 1;
+}
+
+.ear {
+  width: 22px;
+  height: 48px;
+  background: var(--buddy-ear);
+  border-radius: 20px 20px 10px 10px;
+  position: relative;
+}
+
+.ear::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 10px;
+  transform: translateX(-50%);
+  width: 10px;
+  height: 28px;
+  background: #ffab91;
+  border-radius: 10px;
+  opacity: 0.7;
+}
+
+.buddy-face {
+  width: 90px;
+  height: 70px;
+  background: var(--buddy);
+  border-radius: 45% 45% 40% 40%;
+  position: relative;
+  box-shadow: inset 0 -4px 0 rgba(0, 0, 0, 0.04);
+  z-index: 2;
+}
+
+.buddy-small .buddy-face {
+  width: 64px;
+  height: 50px;
+}
+
+.eye {
+  position: absolute;
+  top: 28px;
+  width: 10px;
+  height: 12px;
+  background: #4e342e;
+  border-radius: 50%;
+}
+
+.buddy-small .eye {
+  top: 20px;
+  width: 8px;
+  height: 9px;
+}
+
+.eye.left { left: 22px; }
+.eye.right { right: 22px; }
+.buddy-small .eye.left { left: 16px; }
+.buddy-small .eye.right { right: 16px; }
+
+.mouth {
+  position: absolute;
+  left: 50%;
+  bottom: 14px;
+  transform: translateX(-50%);
+  width: 14px;
+  height: 8px;
+  border: 3px solid #6d4c41;
+  border-top: none;
+  border-radius: 0 0 14px 14px;
+}
+
+.mouth.smile {
+  width: 18px;
+  height: 10px;
+  border-color: #e57373;
+}
+
+.blush {
+  position: absolute;
+  top: 36px;
+  width: 14px;
+  height: 8px;
+  background: #ffab91;
+  border-radius: 50%;
+  opacity: 0.55;
+}
+
+.blush.left { left: 10px; }
+.blush.right { right: 10px; }
+
+.buddy-body {
+  width: 78px;
+  height: 70px;
+  background: var(--buddy);
+  border-radius: 30px 30px 24px 24px;
+  margin-top: -8px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding-bottom: 4px;
+}
+
+.buddy-small .buddy-body {
+  width: 56px;
+  height: 50px;
+}
+
+.buddy-tummy {
+  width: 36px;
+  height: 28px;
+  background: #fff8e7;
+  border-radius: 50%;
+  position: absolute;
+  top: 12px;
+}
+
+.buddy-pants {
+  width: 72px;
+  height: 28px;
+  background: var(--buddy-pants);
+  border-radius: 8px 8px 16px 16px;
+  transition: transform 0.35s ease, opacity 0.35s ease;
+}
+
+.buddy-pants.down {
+  transform: translateY(22px);
+  opacity: 0.35;
+}
+
+.buddy-pants.up {
+  transform: none;
+  opacity: 1;
+}
+
+.buddy[data-pose="wiggle"] {
+  animation: wiggle 0.7s ease-in-out infinite;
+}
+
+.buddy[data-pose="happy"],
+.buddy[data-pose="celebrate"] {
+  animation: bounce 0.8s ease-in-out infinite;
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(-3deg) translateX(-2px); }
+  50% { transform: rotate(3deg) translateX(2px); }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* ---------- ステップ1 ---------- */
+.char-stage {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  min-height: 220px;
+  justify-content: center;
+}
+
+#tummy-sign {
+  cursor: pointer;
+  outline: none;
+}
+
+#tummy-sign .tummy-ripple {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 3px solid var(--accent-pink);
+  opacity: 0;
+  animation: ripple 1.4s ease-out infinite;
+  pointer-events: none;
+}
+
+#tummy-sign.ready .tummy-ripple {
+  opacity: 1;
+}
+
+@keyframes ripple {
+  0% { transform: scale(0.85); opacity: 0.8; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+
+.sign-bubble {
+  background: #fff5f7;
+  color: #c2185b;
+  border: 3px solid #f8bbd0;
+  border-radius: 20px;
+  padding: 12px 20px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  box-shadow: 0 4px 12px var(--shadow);
+  animation: pop 1.2s ease-in-out infinite;
+}
+
+.sign-bubble:active {
+  transform: scale(0.96);
+}
+
+.sign-bubble.done {
+  background: #e8f5e9;
+  color: #2e7d32;
+  border-color: #a5d6a7;
+  animation: none;
+}
+
+@keyframes pop {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+/* ---------- ステップ2 ---------- */
+.path-area {
+  position: relative;
+  width: min(100%, 520px);
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px;
+}
+
+#buddy-drag {
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: left 0.05s linear;
+}
+
+.path-dots {
+  position: absolute;
+  left: 100px;
+  right: 130px;
+  top: 50%;
+  display: flex;
+  justify-content: space-between;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.path-dots span {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #b3e5fc;
+  box-shadow: 0 0 0 4px rgba(179, 229, 252, 0.35);
+}
+
+.toilet-door {
+  width: 110px;
+  height: 150px;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.door-frame {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, #e3f2fd, #bbdefb);
+  border: 4px solid #90caf9;
+  border-radius: 16px 16px 8px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 8px 0 #90caf9;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+}
+
+.toilet-door.highlight .door-frame {
+  border-color: var(--success);
+  box-shadow: 0 8px 0 #81c784, 0 0 0 6px rgba(129, 199, 132, 0.25);
+  transform: scale(1.04);
+}
+
+.door-label {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--primary-dark);
+}
+
+.mini-toilet {
+  width: 42px;
+  height: 48px;
+  background: #fff;
+  border-radius: 8px 8px 12px 12px;
+  border: 3px solid #cfd8dc;
+  position: relative;
+}
+
+.mini-toilet::before {
+  content: "";
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 26px;
+  height: 18px;
+  border: 3px solid #b0bec5;
+  border-radius: 50%;
+}
+
+/* ---------- ステップ3 ---------- */
+.toilet-room {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  min-height: 240px;
+  width: 100%;
+}
+
+.sit-stage {
+  position: relative;
+  width: min(280px, 88vw);
+  height: 240px;
+  flex-shrink: 0;
+}
+
+/* すわる前: トイレの左に立つ（ドラッグ可） */
+.buddy-sit {
+  position: absolute;
+  left: 0;
+  bottom: 20px;
+  z-index: 3;
+  cursor: grab;
+  touch-action: none;
+  transition:
+    left 0.45s cubic-bezier(0.34, 1.2, 0.64, 1),
+    bottom 0.45s cubic-bezier(0.34, 1.2, 0.64, 1),
+    transform 0.45s cubic-bezier(0.34, 1.2, 0.64, 1);
+}
+
+.buddy-sit.dragging {
+  cursor: grabbing;
+  z-index: 10;
+  transition: none;
+  filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.18));
+}
+
+/* すわったあと: 便座の真上にのる */
+.buddy-sit.on-toilet {
+  left: 50%;
+  bottom: 58px;
+  transform: translateX(-50%) scale(0.88);
+  z-index: 4;
+  cursor: default;
+  filter: none;
+}
+
+.buddy-sit.on-toilet .buddy-body {
+  height: 52px;
+  border-radius: 28px 28px 18px 18px;
+}
+
+.buddy-sit.on-toilet .buddy-pants.down {
+  transform: translateY(8px) scaleY(0.5);
+  opacity: 0.2;
+}
+
+.toilet {
+  width: 120px;
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  cursor: pointer;
+  z-index: 1;
+  transition: filter 0.2s ease, transform 0.2s ease;
+}
+
+.toilet.highlight {
+  filter: drop-shadow(0 0 14px rgba(102, 187, 106, 0.55));
+  transform: translateX(-50%) scale(1.04);
+}
+
+.toilet.highlight .toilet-seat,
+.toilet.highlight .toilet-tank,
+.toilet.highlight .toilet-base {
+  border-color: #81c784;
+}
+
+.toilet-tank {
+  width: 70px;
+  height: 48px;
+  margin: 0 auto;
+  background: var(--toilet);
+  border: 4px solid var(--toilet-shadow);
+  border-radius: 10px 10px 4px 4px;
+  position: relative;
+}
+
+.toilet-seat {
+  width: 110px;
+  height: 70px;
+  margin: -4px auto 0;
+  background: var(--toilet);
+  border: 4px solid var(--toilet-shadow);
+  border-radius: 50% 50% 40% 40%;
+  display: grid;
+  place-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+.toilet-bowl {
+  width: 70px;
+  height: 42px;
+  background: #e3f2fd;
+  border-radius: 50%;
+  position: relative;
+  overflow: hidden;
+}
+
+.toilet-base {
+  width: 50px;
+  height: 28px;
+  margin: -8px auto 0;
+  background: var(--toilet);
+  border: 4px solid var(--toilet-shadow);
+  border-top: none;
+  border-radius: 0 0 12px 12px;
+}
+
+.pee-stream {
+  position: absolute;
+  left: 50%;
+  top: 8px;
+  width: 10px;
+  height: 24px;
+  transform: translateX(-50%);
+  background: linear-gradient(180deg, transparent, var(--pee));
+  border-radius: 0 0 8px 8px;
+  animation: pee 0.6s ease-in infinite;
+}
+
+@keyframes pee {
+  0% { opacity: 0.4; height: 10px; }
+  100% { opacity: 1; height: 28px; }
+}
+
+.action-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.action-btn,
+.tool-btn,
+.primary-btn {
+  background: var(--primary);
+  color: #fff;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 14px 22px;
+  border-radius: 999px;
+  box-shadow: 0 4px 0 var(--primary-dark);
+  transition: transform 0.1s, filter 0.15s;
+}
+
+.action-btn:active:not(:disabled),
+.tool-btn:active:not(:disabled),
+.primary-btn:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 var(--primary-dark);
+}
+
+.action-btn:disabled,
+.tool-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.action-btn.done {
+  background: var(--success);
+  box-shadow: 0 4px 0 #43a047;
+}
+
+/* ---------- ステップ4 ---------- */
+.flush-layout {
+  gap: 28px;
+}
+
+.buddy-side {
+  transform: scale(0.85);
+}
+
+.toilet-flush {
+  cursor: default;
+}
+
+.flush-btn {
+  position: absolute;
+  right: -18px;
+  top: 8px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #4fc3f7, #0288d1);
+  color: #fff;
+  box-shadow: 0 4px 0 #01579b, 0 0 0 4px rgba(79, 195, 247, 0.25);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  animation: pop 1.3s ease-in-out infinite;
+}
+
+.flush-btn.done {
+  animation: none;
+  background: linear-gradient(145deg, #81c784, #43a047);
+  box-shadow: 0 4px 0 #2e7d32;
+}
+
+.flush-lever {
+  width: 18px;
+  height: 6px;
+  background: #fff;
+  border-radius: 3px;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
+}
+
+.flush-label {
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.flush-water {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, #81d4fa 0%, transparent 70%);
+  opacity: 0;
+  transform: scale(0.3);
+}
+
+.flush-water.active {
+  animation: swirl 1s ease-out;
+}
+
+@keyframes swirl {
+  0% { opacity: 0.9; transform: scale(0.3) rotate(0deg); }
+  60% { opacity: 0.8; transform: scale(1.2) rotate(180deg); }
+  100% { opacity: 0; transform: scale(1.5) rotate(360deg); }
+}
+
+/* ---------- ステップ5 ---------- */
+.sink-area {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+.sink {
+  width: min(280px, 80vw);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.faucet {
+  width: 28px;
+  height: 36px;
+  background: #90a4ae;
+  border-radius: 8px 8px 4px 4px;
+  position: relative;
+}
+
+.faucet::before {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 16px;
+  height: 12px;
+  background: #78909c;
+  border-radius: 0 0 8px 8px;
+}
+
+.faucet.on::after {
+  content: "";
+  position: absolute;
+  bottom: -28px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 8px;
+  height: 28px;
+  background: linear-gradient(180deg, #4fc3f7, transparent);
+  border-radius: 4px;
+  animation: drip 0.4s linear infinite;
+}
+
+@keyframes drip {
+  0% { opacity: 0.5; height: 16px; }
+  100% { opacity: 1; height: 32px; }
+}
+
+.sink-basin {
+  width: 100%;
+  height: 120px;
+  background: linear-gradient(180deg, #eceff1, #cfd8dc);
+  border: 5px solid #b0bec5;
+  border-radius: 20px;
+  margin-top: 4px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.water {
+  position: absolute;
+  inset: 40% 8% 8%;
+  background: rgba(79, 195, 247, 0.35);
+  border-radius: 0 0 14px 14px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.water.on {
+  opacity: 1;
+}
+
+.hands {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  gap: 12px;
+  transition: filter 0.3s;
+}
+
+.hand {
+  width: 36px;
+  height: 48px;
+  background: #ffcc80;
+  border-radius: 16px 16px 20px 20px;
+  box-shadow: inset 0 -4px 0 rgba(0, 0, 0, 0.06);
+}
+
+.hands[data-state="soapy"] .hand {
+  background: #b2ebf2;
+  box-shadow: 0 0 12px rgba(128, 222, 234, 0.8);
+}
+
+.hands[data-state="scrub"] {
+  animation: scrub 0.35s ease-in-out infinite;
+}
+
+.hands[data-state="scrub"] .hand {
+  background: #b2ebf2;
+}
+
+.hands[data-state="wet"] .hand {
+  background: #ffcc80;
+  filter: brightness(1.05);
+}
+
+.hands[data-state="dry"] .hand {
+  background: #ffcc80;
+}
+
+@keyframes scrub {
+  0%, 100% { transform: rotate(-8deg); }
+  50% { transform: rotate(8deg); }
+}
+
+.bubbles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.bubbles span {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.75);
+  border: 2px solid rgba(178, 235, 242, 0.9);
+  animation: bubble-up 1.2s ease-out forwards;
+}
+
+@keyframes bubble-up {
+  0% { transform: translateY(0) scale(0.6); opacity: 0.9; }
+  100% { transform: translateY(-40px) scale(1.1); opacity: 0; }
+}
+
+.wash-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+.tool-btn {
+  font-size: 0.95rem;
+  padding: 12px 16px;
+}
+
+.soap-btn { background: #26c6da; box-shadow: 0 4px 0 #00838f; }
+.scrub-btn { background: #42a5f5; box-shadow: 0 4px 0 #1565c0; }
+.rinse-btn { background: #29b6f6; box-shadow: 0 4px 0 #0277bd; }
+.dry-btn { background: #ab47bc; box-shadow: 0 4px 0 #6a1b9a; }
+
+.tool-btn.done {
+  background: var(--success);
+  box-shadow: 0 4px 0 #43a047;
+}
+
+/* ---------- クリア ---------- */
+.clear-scene {
+  text-align: center;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+}
+
+.clear-title {
+  font-size: clamp(2rem, 6vw, 2.6rem);
+  color: var(--primary-dark);
+  margin-top: 8px;
+}
+
+.clear-msg {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.sticker-slot {
+  margin-top: 8px;
+}
+
+.sticker {
+  width: 88px;
+  height: 88px;
+  margin: 0 auto 8px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #fff59d, #ffb300);
+  display: grid;
+  place-items: center;
+  font-size: 2.4rem;
+  box-shadow: 0 8px 20px rgba(255, 179, 0, 0.35);
+  animation: sticker-in 0.6s cubic-bezier(0.34, 1.4, 0.64, 1) both;
+}
+
+@keyframes sticker-in {
+  0% { transform: scale(0) rotate(-20deg); opacity: 0; }
+  100% { transform: scale(1) rotate(0); opacity: 1; }
+}
+
+.sticker-label {
+  font-weight: 700;
+  color: #f57c00;
+}
+
+.sticker-count {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.confetti {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.confetti i {
+  position: absolute;
+  top: -12px;
+  width: 10px;
+  height: 14px;
+  border-radius: 2px;
+  animation: fall linear forwards;
+}
+
+@keyframes fall {
+  to {
+    transform: translateY(360px) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+/* ---------- フッター ---------- */
+footer {
+  height: 76px;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: #f0faff;
+  border-top: 2px solid #d6edf8;
+  flex-shrink: 0;
+}
+
+#footer-message {
+  font-weight: 700;
+  font-size: clamp(0.9rem, 2.2vw, 1.05rem);
+  color: var(--ink);
+  flex: 1;
+  min-width: 0;
+}
+
+.footer-actions {
+  flex-shrink: 0;
+}
+
+.primary-btn {
+  min-width: 120px;
+}
+
+/* ---------- スマホ調整 ---------- */
+@media (max-width: 640px) {
+  header {
+    height: auto;
+    min-height: 72px;
+    flex-wrap: wrap;
+    padding: 10px 12px;
+    gap: 8px;
+  }
+
+  header h1 {
+    order: 1;
+    flex: 1;
+    font-size: 0.95rem;
+  }
+
+  .back-btn {
+    order: 0;
+    padding: 8px 12px;
+    font-size: 0.85rem;
+  }
+
+  .steps-nav {
+    order: 2;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .step-text {
+    font-size: 10px;
+  }
+
+  .step-indicator {
+    padding: 4px 4px;
+    flex: 1;
+  }
+
+  footer {
+    height: auto;
+    min-height: 68px;
+    padding: 10px 12px;
+    flex-wrap: wrap;
+  }
+
+  .path-area {
+    height: 180px;
+  }
+
+  .sit-stage {
+    height: 220px;
+  }
+
+  .buddy-sit.on-toilet {
+    bottom: 52px;
+  }
+}

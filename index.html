@@ -95,6 +95,11 @@
         border-color: #e67e22;
       }
 
+      .game-card.toilet:hover,
+      .game-card.toilet:focus-visible {
+        border-color: #3d9fd8;
+      }
+
       .icon {
         font-size: 3.5rem;
         line-height: 1;
@@ -128,6 +133,11 @@
         background: #fff0e0;
         color: #c05621;
       }
+
+      .game-card.toilet .badge {
+        background: #e3f4ff;
+        color: #2b7fb3;
+      }
     </style>
   </head>
   <body>
@@ -147,6 +157,13 @@
           <div class="icon">👨‍🍳</div>
           <h2>おうちでコックさん</h2>
           <p>ハンバーグ・オムライス・ピザをつくろう！</p>
+          <span class="badge">はじめる</span>
+        </a>
+
+        <a class="game-card toilet" href="./toilet/">
+          <div class="icon">🚽</div>
+          <h2>トイレいけるかな？</h2>
+          <p>きづいて・すわって・ながして・てをあらおう！</p>
           <span class="badge">はじめる</span>
         </a>
       </div>

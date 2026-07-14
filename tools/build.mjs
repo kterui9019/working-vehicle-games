@@ -15,6 +15,9 @@ cpSync(join(root, "index.html"), join(dist, "index.html"));
 // Cooking game (static)
 cpSync(join(root, "cook"), join(dist, "cook"), { recursive: true });
 
+// Toilet training game (static)
+cpSync(join(root, "toilet"), join(dist, "toilet"), { recursive: true });
+
 // Vehicles (Vite)
 const build = spawnSync("npx", ["vite", "build", "--config", "vehicles/vite.config.js"], {
   cwd: root,

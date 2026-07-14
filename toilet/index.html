@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#5eb8e8">
+  <title>トイレいけるかな？</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- メニュー -->
+  <div id="menu-screen" class="menu-screen">
+    <div class="menu-content">
+      <h1 class="menu-title">トイレいけるかな？</h1>
+      <p class="menu-subtitle">いっしょに れんしゅうしよう！</p>
+      <div class="mode-cards">
+        <button class="mode-card" data-mode="pee" type="button">
+          <div class="mode-icon pee-icon" aria-hidden="true"></div>
+          <span class="mode-name">おしっこの れんしゅう</span>
+          <span class="mode-desc">きづいて → すわって → ながして → てをあらう</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="game-container" style="display: none;">
+    <header>
+      <button id="back-to-menu-btn" class="back-btn" type="button" aria-label="メニューにもどる">← メニュー</button>
+      <h1 id="game-title">おしっこの れんしゅう</h1>
+      <div class="steps-nav" id="steps-nav" aria-label="ステップ">
+        <div class="step-indicator active" data-step="1">
+          <span class="step-num">1</span>
+          <span class="step-text">きづく</span>
+        </div>
+        <div class="step-indicator" data-step="2">
+          <span class="step-num">2</span>
+          <span class="step-text">いく</span>
+        </div>
+        <div class="step-indicator" data-step="3">
+          <span class="step-num">3</span>
+          <span class="step-text">すわる</span>
+        </div>
+        <div class="step-indicator" data-step="4">
+          <span class="step-num">4</span>
+          <span class="step-text">ながす</span>
+        </div>
+        <div class="step-indicator" data-step="5">
+          <span class="step-num">5</span>
+          <span class="step-text">あらう</span>
+        </div>
+      </div>
+    </header>
+
+    <main id="play-area">
+      <!-- ステップ1: きづく -->
+      <section class="step-section active" id="step-1" data-step="1">
+        <div class="scene scene-room">
+          <div class="char-stage">
+            <div id="buddy" class="buddy" data-pose="wiggle">
+              <div class="buddy-ears">
+                <span class="ear left"></span>
+                <span class="ear right"></span>
+              </div>
+              <div class="buddy-face">
+                <span class="eye left"></span>
+                <span class="eye right"></span>
+                <span class="mouth"></span>
+                <span class="blush left"></span>
+                <span class="blush right"></span>
+              </div>
+              <div class="buddy-body">
+                <div class="buddy-tummy" id="tummy-sign" role="button" tabindex="0" aria-label="もじもじサイン">
+                  <span class="tummy-ripple"></span>
+                </div>
+                <div class="buddy-pants"></div>
+              </div>
+            </div>
+            <button type="button" id="sign-btn" class="sign-bubble" aria-label="もじもじ">
+              もじもじ…
+            </button>
+          </div>
+          <p class="guide-bubble" id="guide-1">おなかが もじもじ！ タップしてね</p>
+        </div>
+      </section>
+
+      <!-- ステップ2: いく -->
+      <section class="step-section" id="step-2" data-step="2">
+        <div class="scene scene-hall">
+          <div class="path-area">
+            <div id="buddy-drag" class="buddy buddy-small" data-pose="walk">
+              <div class="buddy-ears">
+                <span class="ear left"></span>
+                <span class="ear right"></span>
+              </div>
+              <div class="buddy-face">
+                <span class="eye left"></span>
+                <span class="eye right"></span>
+                <span class="mouth"></span>
+              </div>
+              <div class="buddy-body">
+                <div class="buddy-tummy"></div>
+                <div class="buddy-pants"></div>
+              </div>
+            </div>
+            <div class="path-dots" aria-hidden="true">
+              <span></span><span></span><span></span><span></span>
+            </div>
+            <div id="toilet-target" class="toilet-door" aria-label="トイレ">
+              <div class="door-frame">
+                <span class="door-label">トイレ</span>
+                <div class="mini-toilet"></div>
+              </div>
+            </div>
+          </div>
+          <p class="guide-bubble" id="guide-2">うさぎを トイレまで ひっぱってね</p>
+        </div>
+      </section>
+
+      <!-- ステップ3: すわる -->
+      <section class="step-section" id="step-3" data-step="3">
+        <div class="scene scene-toilet">
+          <div class="toilet-room">
+            <div class="sit-stage">
+              <div id="buddy-sit" class="buddy buddy-sit" data-pose="stand" aria-label="うさぎをドラッグ">
+                <div class="buddy-ears">
+                  <span class="ear left"></span>
+                  <span class="ear right"></span>
+                </div>
+                <div class="buddy-face">
+                  <span class="eye left"></span>
+                  <span class="eye right"></span>
+                  <span class="mouth"></span>
+                </div>
+                <div class="buddy-body">
+                  <div class="buddy-tummy"></div>
+                  <div class="buddy-pants" id="pants"></div>
+                </div>
+              </div>
+              <div id="toilet" class="toilet" aria-label="トイレ">
+                <div class="toilet-tank"></div>
+                <div class="toilet-seat">
+                  <div class="toilet-bowl">
+                    <div id="pee-stream" class="pee-stream" hidden></div>
+                  </div>
+                </div>
+                <div class="toilet-base"></div>
+              </div>
+            </div>
+          </div>
+          <p class="guide-bubble" id="guide-3">うさぎを トイレに のせてね</p>
+        </div>
+      </section>
+
+      <!-- ステップ4: ながす -->
+      <section class="step-section" id="step-4" data-step="4">
+        <div class="scene scene-toilet">
+          <div class="toilet-room flush-layout">
+            <div class="buddy buddy-happy buddy-side" data-pose="happy">
+              <div class="buddy-ears">
+                <span class="ear left"></span>
+                <span class="ear right"></span>
+              </div>
+              <div class="buddy-face">
+                <span class="eye left"></span>
+                <span class="eye right"></span>
+                <span class="mouth smile"></span>
+              </div>
+              <div class="buddy-body">
+                <div class="buddy-tummy"></div>
+                <div class="buddy-pants up"></div>
+              </div>
+            </div>
+            <div class="toilet toilet-flush">
+              <div class="toilet-tank">
+                <button type="button" id="flush-btn" class="flush-btn" aria-label="ながす">
+                  <span class="flush-lever"></span>
+                  <span class="flush-label">ながす</span>
+                </button>
+              </div>
+              <div class="toilet-seat">
+                <div class="toilet-bowl">
+                  <div id="flush-water" class="flush-water"></div>
+                </div>
+              </div>
+              <div class="toilet-base"></div>
+            </div>
+          </div>
+          <p class="guide-bubble" id="guide-4">レバーを タップして みずを ながそう</p>
+        </div>
+      </section>
+
+      <!-- ステップ5: あらう -->
+      <section class="step-section" id="step-5" data-step="5">
+        <div class="scene scene-sink">
+          <div class="sink-area">
+            <div class="sink">
+              <div class="faucet" id="faucet"></div>
+              <div class="sink-basin">
+                <div id="water" class="water"></div>
+                <div id="bubbles" class="bubbles" aria-hidden="true"></div>
+                <div id="hands" class="hands" data-state="dry">
+                  <span class="hand left"></span>
+                  <span class="hand right"></span>
+                </div>
+              </div>
+            </div>
+            <div class="wash-tools">
+              <button type="button" id="soap-btn" class="tool-btn soap-btn">せっけん</button>
+              <button type="button" id="scrub-btn" class="tool-btn scrub-btn" disabled>ごしごし</button>
+              <button type="button" id="rinse-btn" class="tool-btn rinse-btn" disabled>すすぐ</button>
+              <button type="button" id="dry-btn" class="tool-btn dry-btn" disabled>ふく</button>
+            </div>
+          </div>
+          <p class="guide-bubble" id="guide-5">せっけんで てを あらおう</p>
+        </div>
+      </section>
+
+      <!-- クリア -->
+      <section class="step-section" id="step-clear" data-step="clear">
+        <div class="clear-scene">
+          <div id="confetti" class="confetti" aria-hidden="true"></div>
+          <div class="buddy buddy-celebrate" data-pose="celebrate">
+            <div class="buddy-ears">
+              <span class="ear left"></span>
+              <span class="ear right"></span>
+            </div>
+            <div class="buddy-face">
+              <span class="eye left"></span>
+              <span class="eye right"></span>
+              <span class="mouth smile"></span>
+            </div>
+            <div class="buddy-body">
+              <div class="buddy-tummy"></div>
+              <div class="buddy-pants up"></div>
+            </div>
+          </div>
+          <h2 class="clear-title">やったね！</h2>
+          <p class="clear-msg">ひとりで トイレに いけたよ</p>
+          <div class="sticker-slot">
+            <div id="earned-sticker" class="sticker" aria-label="シール">⭐</div>
+            <p class="sticker-label">シール ゲット！</p>
+          </div>
+          <p class="sticker-count" id="sticker-count"></p>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p id="footer-message">おなかが もじもじ！ タップしてね</p>
+      <div class="footer-actions">
+        <button type="button" id="restart-btn" class="primary-btn" style="display: none;">もういちど</button>
+      </div>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
